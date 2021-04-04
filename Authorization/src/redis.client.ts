@@ -1,5 +1,5 @@
 import "dotenv/config";
-import redis from "redis";
+import * as redis from "redis";
 import { promisify } from "util";
 
 const redisClient: redis.RedisClient = redis.createClient({

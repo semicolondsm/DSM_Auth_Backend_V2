@@ -1,6 +1,6 @@
-import nodemailer from "nodemailer";
-import path from "path";
-import fs from "fs";
+import * as nodemailer from "nodemailer";
+import * as path from "path";
+import * as fs from "fs";
 
 const HTMLTemplate: string = fs.readFileSync(
   path.join(__dirname, "./mail.template.html"),
