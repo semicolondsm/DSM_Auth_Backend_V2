@@ -4,7 +4,7 @@ import { User } from "./user.entity";
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
   public async checkExist(identity: string): Promise<boolean> {
-    const user = this.createQueryBuilder("user")
+    const user = await this.createQueryBuilder("user")
       .select("user.identity")
       .where("user.identity = :identity", { identity })
       .getOne();
