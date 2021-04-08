@@ -62,7 +62,10 @@ describe("AuthController", () => {
       controller
         .checkAllowedId({ id: "not allowed id" })
         .then(() => expect(1).toEqual(2))
-        .catch((err) => expect(err.getStatus()).toEqual(405));
+        .catch((err) => {
+          expect(err.getStatus()).toEqual(405);
+          expect(err.message).toEqual("Not Allowed ID");
+        });
     });
   });
 });
