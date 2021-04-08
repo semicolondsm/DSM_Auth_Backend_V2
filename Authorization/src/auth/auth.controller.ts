@@ -5,7 +5,7 @@ import { CheckIdDto } from "./dto/check-id.dto";
 
 @Controller("auth")
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post("check/id")
   public async checkAllowedId(@Body() body: CheckIdDto) {
