@@ -1,6 +1,5 @@
 import "dotenv/config";
 import { ConnectionOptions } from "typeorm";
-import { User } from "./shared/user/entity/user.entity";
 
 interface DBConnectionOptions {
   [env: string]: ConnectionOptions;
@@ -16,7 +15,7 @@ const connectionOptions: DBConnectionOptions = {
     database: process.env.DEVELOPMENT_DATABASE_NAME,
     synchronize: true,
     logging: true,
-    entities: [User],
+    entities: ["./dist/**/*.entity.js"],
   },
   production: {
     type: "postgres",
@@ -27,7 +26,7 @@ const connectionOptions: DBConnectionOptions = {
     database: process.env.PRODUCTION_DATABASE_NAME,
     synchronize: false,
     logging: true,
-    entities: [User],
+    entities: ["./dist/**/*.entity.js"],
   },
 };
 
