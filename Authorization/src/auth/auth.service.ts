@@ -15,7 +15,7 @@ import * as bcrypt from "bcrypt";
 export class AuthService {
   constructor(
     private readonly userRepository: UserRepository,
-    private readonly userService: UserService
+    private readonly userService: UserService,
   ) {}
 
   public async checkAllowedId(identity: string) {
@@ -58,7 +58,7 @@ export class AuthService {
 
   private async validationUser(identity: string, password: string) {
     const user = await this.userService.findByIdentity(identity);
-    if(user && await bcrypt.compare(password, user.password)) {
+    if (user && (await bcrypt.compare(password, user.password))) {
       return true;
     }
     return false;
