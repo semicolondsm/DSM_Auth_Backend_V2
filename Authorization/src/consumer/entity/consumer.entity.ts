@@ -1,4 +1,4 @@
-import { User } from "src/shared/user/entity/user.entity";
+import { User } from "../../shared/user/entity/user.entity";
 import {
   Column,
   Entity,
@@ -28,6 +28,6 @@ export class Consumer {
   client_secret: string;
 
   @ManyToOne(() => User, (user) => user.consumers)
-  @JoinColumn({ name: "user_id" })
+  @JoinColumn({ name: "UserId" })
   user: User;
 }
