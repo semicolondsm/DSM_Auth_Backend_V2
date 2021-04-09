@@ -55,12 +55,4 @@ export class AuthService {
       Logger.error(err);
     }
   }
-
-  private async validationUser(identity: string, password: string) {
-    const user = await this.userService.findByIdentity(identity);
-    if (user && (await bcrypt.compare(password, user.password))) {
-      return true;
-    }
-    return false;
-  }
 }
