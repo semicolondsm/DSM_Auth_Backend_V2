@@ -16,7 +16,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   public async validate(payload: IJwtPayload) {
-    if(payload.type !== "access") {
+    if (payload.type !== "access") {
       throw unauthorizedTokenException;
     }
     return payload;
@@ -24,7 +24,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 }
 
 @Injectable()
-export class JwtRefreshStrategy extends PassportStrategy(Strategy, "jwt-refresh") {
+export class JwtRefreshStrategy extends PassportStrategy(
+  Strategy,
+  "jwt-refresh",
+) {
   constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -34,7 +37,7 @@ export class JwtRefreshStrategy extends PassportStrategy(Strategy, "jwt-refresh"
   }
 
   public async validate(payload: IJwtPayload) {
-    if(payload.type !== "refresh") {
+    if (payload.type !== "refresh") {
       throw unauthorizedTokenException;
     }
     return payload;
