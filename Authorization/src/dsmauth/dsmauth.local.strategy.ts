@@ -7,7 +7,7 @@ import { DsmauthService } from "./dsmauth.service";
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly dsmauthService: DsmauthService) {
-    super({ usernameField: "identity" });
+    super({ usernameField: "id" });
   }
 
   async validate(identity: string, password: string): Promise<string> {
