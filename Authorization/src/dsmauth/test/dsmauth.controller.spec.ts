@@ -1,5 +1,5 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { DsmauthController } from "./dsmauth.controller";
+import { DsmauthController } from "../dsmauth.controller";
 
 describe("DsmauthController", () => {
   let controller: DsmauthController;
