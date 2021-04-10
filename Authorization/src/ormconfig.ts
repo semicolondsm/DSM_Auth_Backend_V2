@@ -18,7 +18,7 @@ const connectionOptions: DBConnectionOptions = {
     entities: ["./dist/**/*.entity.js"],
   },
   production: {
-    type: "postgres",
+    type: "mysql",
     host: process.env.PRODUCTION_DATABASE_HOST,
     port: +process.env.PRODUCTION_DATABASE_PORT,
     username: process.env.PRODUCTION_DATABASE_USER,
