@@ -1,9 +1,9 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
-import { notAllowedIDException } from "../shared/exception/exception.index";
-import { User } from "../shared/user/entity/user.entity";
-import { AuthController } from "./auth.controller";
-import { AuthService } from "./auth.service";
+import { notAllowedIDException } from "../../shared/exception/exception.index";
+import { User } from "../../shared/user/entity/user.entity";
+import { AuthController } from "../auth.controller";
+import { AuthService } from "../auth.service";
 
 class MockRepository {
   public async findOne(id: string): Promise<User> {

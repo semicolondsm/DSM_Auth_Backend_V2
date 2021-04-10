@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
-import { User } from "../shared/user/entity/user.entity";
-import { AuthService } from "./auth.service";
+import { User } from "../../shared/user/entity/user.entity";
+import { AuthService } from "../auth.service";
 
 class MockRepository {
   public async checkExist(identity: string): Promise<boolean> {
