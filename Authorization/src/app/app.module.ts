@@ -6,6 +6,8 @@ import { DsmauthModule } from "../dsmauth/dsmauth.module";
 import { connectionOptions } from "src/ormconfig";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
+import { APP_FILTER } from "@nestjs/core";
+import { HttpErrorFilter } from "../shared/exception/exception.filter";
 
 @Module({
   imports: [
@@ -21,6 +23,12 @@ import { AppService } from "./app.service";
     DsmauthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_FILTER,
+      useClass: HttpErrorFilter,
+    },
+  ],
 })
 export class AppModule {}
