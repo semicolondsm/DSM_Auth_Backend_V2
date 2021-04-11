@@ -8,7 +8,7 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { APP_FILTER } from "@nestjs/core";
 import { HttpErrorFilter } from "../shared/exception/exception.filter";
-import { ConsumerModule } from "src/consumer/consumer.module";
+import { ConsumerModule } from "../consumer/consumer.module";
 
 @Module({
   imports: [
