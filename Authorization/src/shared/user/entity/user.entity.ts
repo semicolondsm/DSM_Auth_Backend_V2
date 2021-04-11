@@ -1,4 +1,4 @@
-import { Consumer } from "src/consumer/entity/consumer.entity";
+import { Consumer } from "../../../consumer/entity/consumer.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("users")
