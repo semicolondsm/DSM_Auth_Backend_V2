@@ -5,26 +5,26 @@ import {
   RegistrationDto,
   RegistrationResponseData,
 } from "../dto/registration.dto";
-import { Consumer } from "./consumer.entity";
+import { Consumers } from "./consumer.entity";
 
-@EntityRepository(Consumer)
-export class ConsumerRepository extends Repository<Consumer> {
+@EntityRepository(Consumers)
+export class ConsumersRepository extends Repository<Consumers> {
   public async registration(
     dto: RegistrationDto,
     user: User,
   ): Promise<RegistrationResponseData> {
-    let newConsumer: Consumer;
+    let newConsumers: Consumers;
     const client_id: string = v4().replace(/-/g, "");
     const client_secret: string = v4().replace(/-/g, "");
 
-    newConsumer = this.create({
+    newConsumers = this.create({
       name: dto.consumer,
       user: user,
       client_id,
       client_secret,
       ...dto,
     });
-    await this.save(newConsumer);
+    await this.save(newConsumers);
 
     return { client_id, client_secret };
   }
