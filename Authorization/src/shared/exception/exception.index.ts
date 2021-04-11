@@ -29,3 +29,4 @@ export const notFoundEmailException = new NotFoundException("Not Found Email");
 export const notAllowedIDException = new MethodNotAllowedException(
   "Not Allowed ID",
 );
+export const notFoundUserException = new NotFoundException("Not Found User");
