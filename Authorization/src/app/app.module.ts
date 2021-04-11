@@ -8,6 +8,7 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { APP_FILTER } from "@nestjs/core";
 import { HttpErrorFilter } from "../shared/exception/exception.filter";
+import { ConsumerModule } from "src/consumer/consumer.module";
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { HttpErrorFilter } from "../shared/exception/exception.filter";
     }),
     AuthModule,
     DsmauthModule,
+    ConsumerModule,
   ],
   controllers: [AppController],
   providers: [
