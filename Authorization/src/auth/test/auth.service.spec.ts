@@ -3,7 +3,6 @@ import { getRepositoryToken } from "@nestjs/typeorm";
 import { User } from "../../shared/user/entity/user.entity";
 import { AuthController } from "../auth.controller";
 import { AuthService } from "../auth.service";
-import { UserService } from "../../shared/user/user.service";
 
 class MockRepository {
   public async checkExist(identity: string): Promise<boolean> {
@@ -46,7 +45,6 @@ describe("AuthService", () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
-        UserService,
         {
           provide: getRepositoryToken(User),
           useClass: MockRepository,
