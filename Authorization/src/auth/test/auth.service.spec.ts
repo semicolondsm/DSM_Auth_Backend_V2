@@ -27,6 +27,18 @@ class MockRepository {
   }
 }
 
+jest.mock("../../shared/mail/mail.transport", () => ({
+  sendMail(email: string, authNum: string) {
+    console.log(`send to email to ${email} with ${authNum}`);
+  },
+}));
+
+jest.mock("../../redis.client", () => ({
+  asyncFuncRedisSet(email: string, authNum: string) {
+    console.log(`save for to ${email} with ${authNum}`);
+  },
+}));
+
 describe("AuthService", () => {
   let service: AuthService;
 
@@ -59,10 +71,7 @@ describe("AuthService", () => {
     });
 
     it("should allowed id", () => {
-      service
-        .checkAllowedId("not tester")
-        .then(() => expect(1).toEqual(1))
-        .catch(() => expect(1).toEqual(2));
+      expect(service.checkAllowedId("not tester")).resolves.toBeUndefined();
     });
   });
 
@@ -84,10 +93,12 @@ describe("AuthService", () => {
     });
 
     it("shoul success test", () => {
-      service
-        .emailAuthentication("201216jjw@dsm.hs.kr")
-        .then(() => expect(1).toEqual(1))
-        .catch(() => expect(1).toEqual(2));
+      const spyFnRedis = jest.spyOn(service, "setAuthNumberForEamil");
+      const spyFnEmail = jest.spyOn(service, "sendEmailWithAuthNumber");
+      service.emailAuthentication("201216jjw@dsm.hs.kr").then(() => {
+        expect(spyFnEmail).toBeCalledTimes(1);
+        expect(spyFnRedis).toBeCalledTimes(1);
+      });
     });
   });
 });
