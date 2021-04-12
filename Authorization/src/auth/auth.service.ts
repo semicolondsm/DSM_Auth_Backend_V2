@@ -39,7 +39,7 @@ export class AuthService {
     this.sendEmailWithAuthNumber(email, authNum);
   }
 
-  private async setAuthNumberForEamil(email: string, authNum: string) {
+  public async setAuthNumberForEamil(email: string, authNum: string) {
     try {
       await asyncFuncRedisSet(email, authNum);
     } catch (err) {
@@ -47,7 +47,7 @@ export class AuthService {
     }
   }
 
-  private async sendEmailWithAuthNumber(email: string, authNum: string) {
+  public async sendEmailWithAuthNumber(email: string, authNum: string) {
     try {
       const result = await sendMail(email, authNum);
       Logger.log(result);
