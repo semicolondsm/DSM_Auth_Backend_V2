@@ -59,7 +59,7 @@ export class AuthService {
 
   public async setAuthNumberForEamil(email: string, authNum: string) {
     try {
-      await asyncFuncRedisSet(email, authNum);
+      await asyncFuncRedisSet(email, authNum, "EX", 60 * 5);
     } catch (err) {
       Logger.error(err);
     }
