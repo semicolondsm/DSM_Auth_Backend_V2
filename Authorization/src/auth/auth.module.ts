@@ -6,10 +6,7 @@ import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([UserRepository]),
-    ConfigModule,
-  ],
+  imports: [TypeOrmModule.forFeature([UserRepository]), ConfigModule],
   providers: [AuthService],
   controllers: [AuthController],
 })

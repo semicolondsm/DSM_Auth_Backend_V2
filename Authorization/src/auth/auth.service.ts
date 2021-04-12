@@ -15,9 +15,7 @@ import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly userRepository: UserRepository,
-  ) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   public async checkAllowedId(identity: string) {
     if (await this.userRepository.checkExist(identity)) {
@@ -41,20 +39,27 @@ export class AuthService {
   }
 
   public async userSignUp({ name, email, authcode, id, password }: SignUpDto) {
-    const storedData: string = await asyncFuncRedisGet(email);;
+    const storedData: string = await asyncFuncRedisGet(email);
     if (!storedData || storedData !== authcode) {
       throw unauthorizedCodeException;
     }
-    const getUserPromise: Promise<User> = this.userRepository.findByNameAndEmail(name, email);
+    const getUserPromise: Promise<User> = this.userRepository.findByNameAndEmail(
+      name,
+      email,
+    );
     const hashPasswordPromise: Promise<string> = bcrypt.hash(password, 12);
     const exUser = await getUserPromise;
-    if(!exUser) {
+    if (!exUser) {
       throw notFoundEmailException;
     }
-    if(exUser.password) {
+    if (exUser.password) {
       throw alreadySignupException;
     }
-    await this.userRepository.save({ ...exUser, identity: id, password: await hashPasswordPromise });
+    await this.userRepository.save({
+      ...exUser,
+      identity: id,
+      password: await hashPasswordPromise,
+    });
   }
 
   public async setAuthNumberForEamil(email: string, authNum: string) {

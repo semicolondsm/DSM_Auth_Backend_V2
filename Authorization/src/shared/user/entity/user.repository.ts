@@ -16,8 +16,8 @@ export class UserRepository extends Repository<User> {
 
   public findByNameAndEmail(name: string, email: string): Promise<User> {
     return this.createQueryBuilder("user")
-    .where("user.name = :name", { name })
-    .andWhere("user.email = :email", { email })
-    .getOne();
+      .where("user.name = :name", { name })
+      .andWhere("user.email = :email", { email })
+      .getOne();
   }
 }
