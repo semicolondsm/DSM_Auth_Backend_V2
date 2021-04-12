@@ -1,6 +1,10 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
-import { notAllowedIDException } from "../../shared/exception/exception.index";
+import {
+  alreadySignupException,
+  notAllowedIDException,
+  notFoundEmailException,
+} from "../../shared/exception/exception.index";
 import { User } from "../../shared/user/entity/user.entity";
 import { AuthController } from "../auth.controller";
 import { AuthService } from "../auth.service";
@@ -16,11 +20,22 @@ class MockRepository {
 }
 
 class MockAuthService {
-  public checkAllowedId(id: string): Promise<void> {
+  public async checkAllowedId(id: string): Promise<void> {
     if (id === "allowId") {
       return;
     } else {
       throw notAllowedIDException;
+    }
+  }
+
+  public async emailAuthentication(email: string): Promise<void> {
+    switch (email) {
+      case "notexistemail@gmail.com":
+        throw notFoundEmailException;
+      case "existpassword@gmail.com":
+        throw alreadySignupException;
+      default:
+        return;
     }
   }
 }
@@ -66,6 +81,24 @@ describe("AuthController", () => {
           expect(err.getStatus()).toEqual(405);
           expect(err.message).toEqual("Not Allowed ID");
         });
+    });
+  });
+
+  describe("emailAuthentication", () => {
+    it("should throw not fount email error", () => {
+      expect(
+        controller.emailAuthentication({ email: "notexistemail@gmail.com" }),
+      ).rejects.toEqual(notFoundEmailException);
+    });
+    it("should throw already signup error", () => {
+      expect(
+        controller.emailAuthentication({ email: "existpassword@gmail.com" }),
+      ).rejects.toEqual(alreadySignupException);
+    });
+    it("shoul success test", () => {
+      expect(
+        controller.emailAuthentication({ email: "existemail@gmail.com" }),
+      ).resolves.toEqual({ meessage: "success" });
     });
   });
 });
