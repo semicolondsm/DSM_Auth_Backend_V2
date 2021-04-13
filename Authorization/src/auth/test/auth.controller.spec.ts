@@ -4,10 +4,12 @@ import {
   alreadySignupException,
   notAllowedIDException,
   notFoundEmailException,
+  unauthorizedCodeException,
 } from "../../shared/exception/exception.index";
 import { User } from "../../shared/user/entity/user.entity";
 import { AuthController } from "../auth.controller";
 import { AuthService } from "../auth.service";
+import { SignUpDto } from "../dto/sign-up.dto";
 
 class MockRepository {
   public async findOne(id: string): Promise<User> {
@@ -36,6 +38,18 @@ class MockAuthService {
         throw alreadySignupException;
       default:
         return;
+    }
+  }
+
+  public async userSignUp({ name, email, authcode, password }: SignUpDto) {
+    if (email !== "rightKey" || authcode !== "rightValue") {
+      throw unauthorizedCodeException;
+    }
+    if (name !== "tester") {
+      throw notFoundEmailException;
+    }
+    if (password === "signedPassword") {
+      throw alreadySignupException;
     }
   }
 }
@@ -98,7 +112,40 @@ describe("AuthController", () => {
     it("shoul success test", () => {
       expect(
         controller.emailAuthentication({ email: "existemail@gmail.com" }),
-      ).resolves.toEqual({ meessage: "success" });
+      ).resolves.toEqual({ message: "success" });
+    });
+  });
+
+  describe("userSignUp", () => {
+    const body: SignUpDto = {
+      name: "tester",
+      email: "rightKey",
+      authcode: "rightValue",
+      id: "id",
+      password: "password",
+    };
+    it("should throw unauthorized code error", () => {
+      expect(
+        controller.userSignUp({ ...body, email: "zalgo" }),
+      ).rejects.toEqual(unauthorizedCodeException);
+    });
+
+    it("should throw not fount email error", () => {
+      expect(controller.userSignUp({ ...body, name: "zalgo" })).rejects.toEqual(
+        notFoundEmailException,
+      );
+    });
+
+    it("should throw already signup error", () => {
+      expect(
+        controller.userSignUp({ ...body, password: "signedPassword" }),
+      ).rejects.toEqual(alreadySignupException);
+    });
+
+    it("should success", () => {
+      expect(controller.userSignUp(body)).resolves.toEqual({
+        message: "signup successfully",
+      });
     });
   });
 });

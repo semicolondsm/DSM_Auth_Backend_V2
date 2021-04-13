@@ -20,7 +20,7 @@ export class AuthController {
   public async emailAuthentication(@Body() body: CheckEmailDto) {
     await this.authService.emailAuthentication(body.email);
     return {
-      meessage: "success",
+      message: "success",
     };
   }
 
