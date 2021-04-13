@@ -1,5 +1,10 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
+import {
+  alreadySignupException,
+  notFoundEmailException,
+  unauthorizedCodeException,
+} from "../../shared/exception/exception.index";
 import { User } from "../../shared/user/entity/user.entity";
 import { AuthController } from "../auth.controller";
 import { AuthService } from "../auth.service";
@@ -27,11 +32,21 @@ class MockRepository {
   }
 
   public async findByNameAndEmail(name: string, email: string): Promise<User> {
-    if (name === "exist" && email === "exist") {
-      return new User();
+    if (email === "rightKey") {
+      const user = new User();
+      if (name === "tester") {
+        return user;
+      } else if (name === "signedTester") {
+        user.password = "alreadySignupPassword";
+        return user;
+      }
     } else {
       return undefined;
     }
+  }
+
+  public async save(user: SignUpDto) {
+    expect(user).toEqual({ identity: "id", password: "hashedpassword" });
   }
 }
 
@@ -47,10 +62,17 @@ jest.mock("../../redis.client", () => ({
   },
 
   async asyncFuncRedisGet(email: string): Promise<string> {
-    if(email === "rightKey") {
+    if (email === "rightKey") {
       return "rightValue";
-    } 
-  }
+    }
+    console.log("return undefined value");
+  },
+}));
+
+jest.mock("bcrypt", () => ({
+  async hash(data: string, round: number): Promise<string> {
+    return "hashed" + data;
+  },
 }));
 
 describe("AuthService", () => {
@@ -109,7 +131,7 @@ describe("AuthService", () => {
           expect(err.getStatus()).toEqual(403);
           expect(err.message).toEqual("Already Signup");
           expect(spyFnEmail).toBeCalledTimes(0);
-          expect(spyFnRedis).toBeCalledTimes(0);  
+          expect(spyFnRedis).toBeCalledTimes(0);
         });
     });
 
@@ -120,6 +142,39 @@ describe("AuthService", () => {
         expect(spyFnEmail).toBeCalledTimes(1);
         expect(spyFnRedis).toBeCalledTimes(1);
       });
+    });
+  });
+
+  describe("userSignUp", () => {
+    const body: SignUpDto = {
+      name: "tester",
+      email: "rightKey",
+      authcode: "rightValue",
+      id: "id",
+      password: "password",
+    };
+    it("should throw unauthorized code error because not exist redis value", () => {
+      expect(service.userSignUp({ ...body, email: "zalgo" })).rejects.toEqual(
+        unauthorizedCodeException,
+      );
+    });
+    it("should throw unauthorized code error because not equal authcode", () => {
+      expect(
+        service.userSignUp({ ...body, authcode: "zalgo" }),
+      ).rejects.toEqual(unauthorizedCodeException);
+    });
+    it("should throw not found email error", () => {
+      expect(service.userSignUp({ ...body, name: "zalgo" })).rejects.toEqual(
+        notFoundEmailException,
+      );
+    });
+    it("should throw already signup error", () => {
+      expect(
+        service.userSignUp({ ...body, name: "signedTester" }),
+      ).rejects.toEqual(alreadySignupException);
+    });
+    it("should success", async () => {
+      await service.userSignUp(body);
     });
   });
 });

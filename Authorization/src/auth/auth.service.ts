@@ -3,7 +3,6 @@ import { asyncFuncRedisGet, asyncFuncRedisSet } from "../redis.client";
 import { User } from "../shared/user/entity/user.entity";
 import {
   alreadySignupException,
-  badRequestException,
   notAllowedIDException,
   notFoundEmailException,
   unauthorizedCodeException,
