@@ -1,46 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { User } from "../../shared/user/entity/user.entity";
+import { MockConsumerService } from "../../shared/mock/consumer.mock";
 import { ConsumerController } from "../consumer.controller";
 import { ConsumerService } from "../consumer.service";
-import {
-  RegistrationDto,
-  RegistrationResponseData,
-} from "../dto/registration.dto";
-
-class MockConsumerService {
-  public async registration(
-    dto: RegistrationDto,
-  ): Promise<RegistrationResponseData> {
-    const user = await this.getUser();
-    console.log(`dto: ${JSON.stringify(dto)}`);
-    console.log(`user: ${JSON.stringify(user)}`);
-
-    const client_id = "testuuid";
-    const client_secret = "testuuid";
-    return { client_id, client_secret };
-  }
-
-  public async list() {
-    const consumers = [
-      {
-        name: "naver",
-        domain_url: "naver.com",
-      },
-      {
-        name: "google",
-        domain_url: "google.com",
-      },
-    ];
-
-    return consumers;
-  }
-
-  private async getUser(): Promise<User> {
-    const user = new User();
-    user.identity = "testIdentity";
-    return user;
-  }
-}
 
 describe("ConsumerController", () => {
   let controller: ConsumerController;

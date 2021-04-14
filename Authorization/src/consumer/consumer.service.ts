@@ -24,7 +24,9 @@ export class ConsumerService {
   public async registration(
     dto: RegistrationDto,
   ): Promise<RegistrationResponseData> {
-    const user: User = await this.getUser();
+    const user: User = await this.userRepository.findByRequest(
+      this.request.user,
+    );
     if (!user) {
       throw notFoundUserException;
     }
@@ -33,13 +35,5 @@ export class ConsumerService {
 
   public async list(): Promise<Consumer[]> {
     return await this.consumerRepository.list();
-  }
-
-  private async getUser(): Promise<User> {
-    const payload = this.request.user as IJwtPayload;
-    const user = await this.userRepository.findOne({
-      identity: payload.user_identity,
-    });
-    return user;
   }
 }

@@ -35,4 +35,16 @@ export class ConsumerRepository extends Repository<Consumer> {
       .addSelect("consumer.domain_url")
       .getMany();
   }
+
+  public async myService(userId: number): Promise<Consumer[]> {
+    return await this.createQueryBuilder("consumer")
+      .innerJoin("consumer.user", "user")
+      .select("consumer.name")
+      .addSelect("consumer.domain_url")
+      .addSelect("consumer.redirect_url")
+      .addSelect("consumer.client_id")
+      .addSelect("consumer.client_secret")
+      .where("user.id = :userId", { userId })
+      .getMany();
+  }
 }
