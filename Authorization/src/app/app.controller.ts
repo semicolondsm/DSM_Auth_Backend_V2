@@ -1,6 +1,6 @@
 import { Controller, Get, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
-import { Consumer } from "src/consumer/entity/consumer.entity";
+import { Consumer } from "../consumer/entity/consumer.entity";
 import { AppService } from "./app.service";
 
 @Controller()
