@@ -30,8 +30,9 @@ export class ConsumerRepository extends Repository<Consumer> {
   }
 
   public async list(): Promise<Consumer[]> {
-    return await this.createQueryBuilder()
-      .select(["name", "domain_url"])
-      .getRawMany();
+    return await this.createQueryBuilder("consumer")
+      .select("consumer.name")
+      .addSelect("consumer.domain_url")
+      .getMany();
   }
 }
