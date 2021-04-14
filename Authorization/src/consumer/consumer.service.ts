@@ -9,14 +9,14 @@ import {
   RegistrationDto,
   RegistrationResponseData,
 } from "./dto/registration.dto";
-import { Consumers } from "./entity/consumer.entity";
-import { ConsumersRepository } from "./entity/consumer.repository";
+import { Consumer } from "./entity/consumer.entity";
+import { ConsumerRepository } from "./entity/consumer.repository";
 
 @Injectable({ scope: Scope.REQUEST })
 export class ConsumerService {
   constructor(
-    @InjectRepository(Consumers)
-    private readonly consumerRepository: ConsumersRepository,
+    @InjectRepository(Consumer)
+    private readonly consumerRepository: ConsumerRepository,
     @InjectRepository(User) private readonly userRepository: UserRepository,
     @Inject(REQUEST) private request,
   ) {}
@@ -28,7 +28,11 @@ export class ConsumerService {
     if (!user) {
       throw notFoundUserException;
     }
-    return this.consumerRepository.registration(dto, user);
+    return await this.consumerRepository.registration(dto, user);
+  }
+
+  public async list(): Promise<Consumer[]> {
+    return await this.consumerRepository.list();
   }
 
   private async getUser(): Promise<User> {
