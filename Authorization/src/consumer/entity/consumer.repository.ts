@@ -5,15 +5,15 @@ import {
   RegistrationDto,
   RegistrationResponseData,
 } from "../dto/registration.dto";
-import { Consumer } from "./consumer.entity";
+import { Consumers } from "./consumer.entity";
 
-@EntityRepository(Consumer)
-export class ConsumerRepository extends Repository<Consumer> {
+@EntityRepository(Consumers)
+export class ConsumersRepository extends Repository<Consumers> {
   public async registration(
     dto: RegistrationDto,
     user: User,
   ): Promise<RegistrationResponseData> {
-    let newConsumers: Consumer;
+    let newConsumers: Consumers;
     const client_id: string = v4().replace(/-/g, "");
     const client_secret: string = v4().replace(/-/g, "");
 
@@ -27,12 +27,5 @@ export class ConsumerRepository extends Repository<Consumer> {
     await this.save(newConsumers);
 
     return { client_id, client_secret };
-  }
-
-  public async list(): Promise<Consumer[]> {
-    return await this.createQueryBuilder("consumer")
-      .select("consumer.name")
-      .addSelect("consumer.domain_url")
-      .getMany();
   }
 }
