@@ -9,6 +9,8 @@ import { AppService } from "./app.service";
 import { APP_FILTER } from "@nestjs/core";
 import { HttpErrorFilter } from "../shared/exception/exception.filter";
 import { ConsumerModule } from "../consumer/consumer.module";
+import { ConsumerRepository } from "../consumer/entity/consumer.repository";
+import { UserRepository } from "../shared/user/entity/user.repository";
 
 @Module({
   imports: [
@@ -20,6 +22,7 @@ import { ConsumerModule } from "../consumer/consumer.module";
       useFactory: (config: ConfigService) => config.get(process.env.NODE_ENV),
       inject: [ConfigService],
     }),
+    TypeOrmModule.forFeature([ConsumerRepository, UserRepository]),
     AuthModule,
     DsmauthModule,
     ConsumerModule,
