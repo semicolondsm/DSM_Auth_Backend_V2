@@ -1,16 +1,36 @@
 import { Module } from "@nestjs/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { AuthModule } from "src/auth/auth.module";
+import { AuthModule } from "../auth/auth.module";
+import { DsmauthModule } from "../dsmauth/dsmauth.module";
 import { connectionOptions } from "src/ormconfig";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
+import { APP_FILTER } from "@nestjs/core";
+import { HttpErrorFilter } from "../shared/exception/exception.filter";
+import { ConsumerModule } from "../consumer/consumer.module";
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(connectionOptions[process.env.NODE_ENV]),
+    ConfigModule.forRoot({
+      load: [() => connectionOptions],
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (config: ConfigService) => config.get(process.env.NODE_ENV),
+      inject: [ConfigService],
+    }),
     AuthModule,
+    DsmauthModule,
+    ConsumerModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_FILTER,
+      useClass: HttpErrorFilter,
+    },
+  ],
 })
 export class AppModule {}

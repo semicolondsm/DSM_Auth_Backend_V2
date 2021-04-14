@@ -6,12 +6,17 @@ import {
   notAllowedIDException,
   notFoundEmailException,
 } from "../shared/exception/exception.index";
-import { UserRepository } from "../shared/user/entity/user.repository";
 import { sendMail } from "../shared/mail/mail.transport";
+import { UserService } from "../shared/user/user.service";
+import { UserRepository } from "../shared/user/entity/user.repository";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class AuthService {
-  constructor(private userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly userService: UserService,
+  ) {}
 
   public async checkAllowedId(identity: string) {
     if (await this.userRepository.checkExist(identity)) {

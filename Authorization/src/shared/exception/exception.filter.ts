@@ -22,9 +22,6 @@ export class HttpErrorFilter implements ExceptionFilter {
       Logger.error(exception.message);
     const errorResponse = {
       code: status,
-      timestamp: new Date().toLocaleDateString(),
-      path: request.url,
-      method: request.method,
       message:
         status !== HttpStatus.INTERNAL_SERVER_ERROR
           ? exception.message

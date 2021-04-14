@@ -3,7 +3,16 @@ import * as path from "path";
 import * as fs from "fs";
 
 const HTMLTemplate: string = fs.readFileSync(
-  path.join(__dirname, "./mail.template.html"),
+  path.join(
+    __dirname,
+    "..",
+    "..",
+    "..",
+    "src",
+    "shared",
+    "mail",
+    "./mail.template.html",
+  ),
   { encoding: "utf-8" },
 );
 

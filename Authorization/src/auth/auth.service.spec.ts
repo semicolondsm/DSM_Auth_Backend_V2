@@ -1,6 +1,5 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
-import { notFoundEmailException } from "src/shared/exception/exception.index";
 import { User } from "../shared/user/entity/user.entity";
 import { AuthService } from "./auth.service";
 
