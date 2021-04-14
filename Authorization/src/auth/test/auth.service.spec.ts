@@ -26,8 +26,6 @@ class MockRepository {
       const user = new User();
       user.password = "exist";
       return user;
-    } else {
-      undefined;
     }
   }
 
@@ -40,8 +38,6 @@ class MockRepository {
         user.password = "alreadySignupPassword";
         return user;
       }
-    } else {
-      return undefined;
     }
   }
 

@@ -15,17 +15,13 @@ class MockRepository {
   public async findOne(id: string): Promise<User> {
     if (id === "tester") {
       return new User();
-    } else {
-      return undefined;
     }
   }
 }
 
 class MockAuthService {
   public async checkAllowedId(id: string): Promise<void> {
-    if (id === "allowId") {
-      return;
-    } else {
+    if (id !== "allowId") {
       throw notAllowedIDException;
     }
   }
@@ -72,7 +68,7 @@ describe("AuthController", () => {
       controllers: [AuthController],
     }).compile();
 
-    controller = module.get<AuthController>(AuthController);
+    controller = await module.resolve<AuthController>(AuthController);
   });
 
   it("should be defined", () => {
@@ -81,20 +77,15 @@ describe("AuthController", () => {
 
   describe("checkAllowedId", () => {
     it("should be allowed", () => {
-      controller
-        .checkAllowedId({ id: "allowId" })
-        .then((res) => expect(res.message).toEqual("Allowed ID"))
-        .catch(() => expect(1).toEqual(2));
+      expect(controller.checkAllowedId({ id: "allowId" })).resolves.toEqual({
+        message: "Allowed ID",
+      });
     });
 
     it("should be not allowed", () => {
-      controller
-        .checkAllowedId({ id: "not allowed id" })
-        .then(() => expect(1).toEqual(2))
-        .catch((err) => {
-          expect(err.getStatus()).toEqual(405);
-          expect(err.message).toEqual("Not Allowed ID");
-        });
+      expect(
+        controller.checkAllowedId({ id: "not allowed id" }),
+      ).rejects.toEqual(notAllowedIDException);
     });
   });
 
@@ -147,5 +138,9 @@ describe("AuthController", () => {
         message: "signup successfully",
       });
     });
+  });
+
+  afterAll((done) => {
+    done();
   });
 });

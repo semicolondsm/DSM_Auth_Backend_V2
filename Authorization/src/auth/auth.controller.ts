@@ -16,7 +16,7 @@ export class AuthController {
     };
   }
 
-  @Post("/email")
+  @Post("email")
   public async emailAuthentication(@Body() body: CheckEmailDto) {
     await this.authService.emailAuthentication(body.email);
     return {
@@ -24,7 +24,7 @@ export class AuthController {
     };
   }
 
-  @Post("/signup")
+  @Post("signup")
   public async userSignUp(@Body() body: SignUpDto) {
     await this.authService.userSignUp(body);
     return {
