@@ -6,49 +6,11 @@ import {
   notFoundEmailException,
   unauthorizedCodeException,
 } from "../../shared/exception/exception.index";
+import { MockAuthService, MockUserRepository } from "../../shared/mock/user.mock";
 import { User } from "../../shared/user/entity/user.entity";
 import { AuthController } from "../auth.controller";
 import { AuthService } from "../auth.service";
 import { SignUpDto } from "../dto/sign-up.dto";
-
-class MockRepository {
-  public async findOne(id: string): Promise<User> {
-    if (id === "tester") {
-      return new User();
-    }
-  }
-}
-
-class MockAuthService {
-  public async checkAllowedId(id: string): Promise<void> {
-    if (id !== "allowId") {
-      throw notAllowedIDException;
-    }
-  }
-
-  public async emailAuthentication(email: string): Promise<void> {
-    switch (email) {
-      case "notexistemail@gmail.com":
-        throw notFoundEmailException;
-      case "existpassword@gmail.com":
-        throw alreadySignupException;
-      default:
-        return;
-    }
-  }
-
-  public async userSignUp({ name, email, authcode, password }: SignUpDto) {
-    if (email !== "rightKey" || authcode !== "rightValue") {
-      throw unauthorizedCodeException;
-    }
-    if (name !== "tester") {
-      throw notFoundEmailException;
-    }
-    if (password === "signedPassword") {
-      throw alreadySignupException;
-    }
-  }
-}
 
 describe("AuthController", () => {
   let controller: AuthController;
@@ -62,7 +24,7 @@ describe("AuthController", () => {
         },
         {
           provide: getRepositoryToken(User),
-          useClass: MockRepository,
+          useClass: MockUserRepository,
         },
       ],
       controllers: [AuthController],
