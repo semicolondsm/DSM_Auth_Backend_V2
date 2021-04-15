@@ -13,4 +13,10 @@ export class MockUserRepository {
       return undefined;
     }
   }
+
+  public findOne({ where: { identity } }) {}
+}
+
+export class MockUserService {
+  public findByIdentity(identity: number) {}
 }
