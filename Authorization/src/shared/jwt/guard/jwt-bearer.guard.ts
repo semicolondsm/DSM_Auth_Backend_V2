@@ -6,10 +6,12 @@ export class JwtBearerGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    if(!request.headers[this.header_name]) {
+    if (!request.headers[this.header_name]) {
       return false;
     }
-    request.headers[this.header_name] = request.headers[this.header_name].slice(7);
+    request.headers[this.header_name] = request.headers[this.header_name].slice(
+      7,
+    );
     return true;
   }
 }
