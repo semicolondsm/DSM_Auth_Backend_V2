@@ -1,18 +1,14 @@
 import { JwtModule } from "@nestjs/jwt";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
+import {
+  MockUserRepository,
+  MockUserService,
+} from "../../shared/mock/user.mock";
 import { User } from "../../shared/user/entity/user.entity";
 import { UserService } from "../../shared/user/user.service";
 import { DsmauthController } from "../dsmauth.controller";
 import { DsmauthService } from "../dsmauth.service";
-
-class MockUserRepository {
-  public findOne({ where: { identity } }) {}
-}
-
-class MockUserService {
-  public findByIdentity(identity: number) {}
-}
 
 describe("DsmauthController", () => {
   let controller: DsmauthController;
@@ -34,7 +30,7 @@ describe("DsmauthController", () => {
       controllers: [DsmauthController],
     }).compile();
 
-    controller = module.get<DsmauthController>(DsmauthController);
+    controller = await module.resolve<DsmauthController>(DsmauthController);
   });
 
   it("should be defined", () => {

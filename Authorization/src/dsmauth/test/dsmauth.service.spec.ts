@@ -5,14 +5,10 @@ import { User } from "../../shared/user/entity/user.entity";
 import { DsmauthController } from "../dsmauth.controller";
 import { DsmauthService } from "../dsmauth.service";
 import { UserService } from "../../shared/user/user.service";
-
-class MockUserRepository {
-  public findOne({ where: { identity } }) {}
-}
-
-class MockUserService {
-  public findByIdentity(identity: number) {}
-}
+import {
+  MockUserRepository,
+  MockUserService,
+} from "../../shared/mock/user.mock";
 
 describe("DsmauthService", () => {
   let service: DsmauthService;
@@ -34,7 +30,7 @@ describe("DsmauthService", () => {
       controllers: [DsmauthController],
     }).compile();
 
-    service = module.get<DsmauthService>(DsmauthService);
+    service = await module.resolve<DsmauthService>(DsmauthService);
   });
 
   it("should be defined", () => {
