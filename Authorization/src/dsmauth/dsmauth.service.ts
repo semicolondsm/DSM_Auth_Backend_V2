@@ -7,6 +7,7 @@ import {
   JWT_SECRET_KEY,
 } from "../shared/jwt/jwt.constant";
 import { DsmauthLoginDto } from "./dto/dsmauth-login.dto";
+import { IJwtPayload } from "../shared/jwt/interface/jwt-payload.interface";
 
 @Injectable()
 export class DsmauthService {
@@ -25,6 +26,10 @@ export class DsmauthService {
         },
       ),
     };
+  }
+
+  public async refreshToken({ user_identity, client_id }: IJwtPayload) {
+    
   }
 
   public async validationUser(identity: string, password: string) {
