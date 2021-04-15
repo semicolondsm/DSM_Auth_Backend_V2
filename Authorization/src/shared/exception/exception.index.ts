@@ -30,3 +30,6 @@ export const notAllowedIDException = new MethodNotAllowedException(
   "Not Allowed ID",
 );
 export const notFoundUserException = new NotFoundException("Not Found User");
+export const notFoundConsumerException = new NotFoundException(
+  "Not Found Consumer",
+);
