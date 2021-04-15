@@ -1,4 +1,5 @@
 import { SignUpDto } from "../../auth/dto/sign-up.dto";
+import { alreadySignupException, notAllowedIDException, notFoundEmailException, unauthorizedCodeException } from "../exception/exception.index";
 import { IJwtPayload } from "../jwt/interface/jwt-payload.interface";
 import { User } from "../user/entity/user.entity";
 
@@ -17,6 +18,7 @@ export class MockUserRepository {
 
   public async findOne({ where: { identity } });
   public async findOne({ where: { email } }): Promise<User>;
+  public async findOne(id: string): Promise<User>;
 
   public async findOne(args: any): Promise<User> {
     if (args.where) {
@@ -31,6 +33,10 @@ export class MockUserRepository {
         }
       } else if (args.where.identity) {
         const identity: string = args.where.identity;
+      }
+    } else {
+      if (args === "tester") {
+        return new User();
       }
     }
   }
@@ -62,4 +68,35 @@ export class MockUserRepository {
 
 export class MockUserService {
   public findByIdentity(identity: number) {}
+}
+
+export class MockAuthService {
+  public async checkAllowedId(id: string): Promise<void> {
+    if (id !== "allowId") {
+      throw notAllowedIDException;
+    }
+  }
+
+  public async emailAuthentication(email: string): Promise<void> {
+    switch (email) {
+      case "notexistemail@gmail.com":
+        throw notFoundEmailException;
+      case "existpassword@gmail.com":
+        throw alreadySignupException;
+      default:
+        return;
+    }
+  }
+
+  public async userSignUp({ name, email, authcode, password }: SignUpDto) {
+    if (email !== "rightKey" || authcode !== "rightValue") {
+      throw unauthorizedCodeException;
+    }
+    if (name !== "tester") {
+      throw notFoundEmailException;
+    }
+    if (password === "signedPassword") {
+      throw alreadySignupException;
+    }
+  }
 }
