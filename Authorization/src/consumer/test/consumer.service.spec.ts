@@ -7,6 +7,8 @@ import { REQUEST } from "@nestjs/core";
 import { MockConsumerRepository } from "../../shared/mock/consumer.mock";
 import { MockUserRepository } from "../../shared/mock/user.mock";
 import { MockRequest } from "../../shared/mock/request.mock";
+import { Redirect } from "../entity/redirect.entity";
+import { MockRedirectRepository } from "../../shared/mock/redirect.mock";
 
 describe("ConsumerService", () => {
   let service: ConsumerService;
@@ -22,6 +24,10 @@ describe("ConsumerService", () => {
         {
           provide: getRepositoryToken(User),
           useClass: MockUserRepository,
+        },
+        {
+          provide: getRepositoryToken(Redirect),
+          useClass: MockRedirectRepository,
         },
         {
           provide: REQUEST,
