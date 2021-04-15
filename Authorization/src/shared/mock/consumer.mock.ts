@@ -1,6 +1,9 @@
+import { urlDto } from "../../consumer/dto/url.dto";
 import { RegistrationDto } from "../../consumer/dto/registration.dto";
 import { User } from "../user/entity/user.entity";
 import { consumers, consumersList } from "./dummy/consumer.dummy";
+import { notFoundConsumerException } from "../exception/exception.index";
+import { Consumer } from "../../consumer/entity/consumer.entity";
 
 export class MockConsumerRepository {
   public registration(dto: RegistrationDto, user: User) {
@@ -27,6 +30,10 @@ export class MockConsumerRepository {
 
     return consumers;
   }
+
+  public findOne() {
+    return new Consumer();
+  }
 }
 
 export class MockConsumerService {
@@ -42,6 +49,12 @@ export class MockConsumerService {
 
   public list() {
     return consumersList;
+  }
+
+  public url(dto: urlDto) {
+    if (dto.client_id !== "testuuid") {
+      throw notFoundConsumerException;
+    }
   }
 
   private getUser() {

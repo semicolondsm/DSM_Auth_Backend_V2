@@ -5,10 +5,15 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConsumerRepository } from "./entity/consumer.repository";
 import { UserRepository } from "../shared/user/entity/user.repository";
 import { JwtStrategy } from "../shared/jwt/passport/jwt.strategy";
+import { RedirectRepository } from "./entity/redirect.repository";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ConsumerRepository, UserRepository]),
+    TypeOrmModule.forFeature([
+      ConsumerRepository,
+      UserRepository,
+      RedirectRepository,
+    ]),
     JwtStrategy,
   ],
   providers: [ConsumerService],

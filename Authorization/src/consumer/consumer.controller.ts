@@ -5,6 +5,7 @@ import {
   RegistrationDto,
   RegistrationResponseData,
 } from "./dto/registration.dto";
+import { urlDto } from "./dto/url.dto";
 import { Consumer } from "./entity/consumer.entity";
 
 @Controller("consumer")
@@ -22,5 +23,12 @@ export class ConsumerController {
   @Get("list")
   public async list(): Promise<Consumer[]> {
     return await this.consumerService.list();
+  }
+
+  @UseGuards(AuthGuard("jwt"))
+  @Post("url")
+  public async url(@Body() dto: urlDto): Promise<{ message: string }> {
+    await this.consumerService.url(dto);
+    return { message: "success" };
   }
 }

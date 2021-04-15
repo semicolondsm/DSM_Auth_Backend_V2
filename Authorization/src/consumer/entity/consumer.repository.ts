@@ -1,4 +1,4 @@
-import { User } from "src/shared/user/entity/user.entity";
+import { User } from "../../shared/user/entity/user.entity";
 import { EntityRepository, Repository } from "typeorm";
 import { v4 } from "uuid";
 import {
@@ -25,7 +25,6 @@ export class ConsumerRepository extends Repository<Consumer> {
       ...dto,
     });
     await this.save(newConsumers);
-
     return { client_id, client_secret };
   }
 
@@ -39,9 +38,10 @@ export class ConsumerRepository extends Repository<Consumer> {
   public async myService(userId: number): Promise<Consumer[]> {
     return await this.createQueryBuilder("consumer")
       .innerJoin("consumer.user", "user")
-      .select("consumer.name")
+      .innerJoin("consumer.redirects", "redirect")
+      .select("redirect.redirect_url")
+      .addSelect("consumer.name")
       .addSelect("consumer.domain_url")
-      .addSelect("consumer.redirect_url")
       .addSelect("consumer.client_id")
       .addSelect("consumer.client_secret")
       .where("user.id = :userId", { userId })
