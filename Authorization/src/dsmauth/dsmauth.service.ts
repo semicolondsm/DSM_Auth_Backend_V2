@@ -28,9 +28,7 @@ export class DsmauthService {
     };
   }
 
-  public async refreshToken({ user_identity, client_id }: IJwtPayload) {
-    
-  }
+  public async refreshToken({ user_identity, client_id }: IJwtPayload) {}
 
   public async validationUser(identity: string, password: string) {
     const user = await this.userService.findByIdentity(identity);

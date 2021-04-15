@@ -1,5 +1,10 @@
 import { SignUpDto } from "../../auth/dto/sign-up.dto";
-import { alreadySignupException, notAllowedIDException, notFoundEmailException, unauthorizedCodeException } from "../exception/exception.index";
+import {
+  alreadySignupException,
+  notAllowedIDException,
+  notFoundEmailException,
+  unauthorizedCodeException,
+} from "../exception/exception.index";
 import { IJwtPayload } from "../jwt/interface/jwt-payload.interface";
 import { User } from "../user/entity/user.entity";
 

@@ -6,7 +6,10 @@ import {
   notFoundEmailException,
   unauthorizedCodeException,
 } from "../../shared/exception/exception.index";
-import { MockAuthService, MockUserRepository } from "../../shared/mock/user.mock";
+import {
+  MockAuthService,
+  MockUserRepository,
+} from "../../shared/mock/user.mock";
 import { User } from "../../shared/user/entity/user.entity";
 import { AuthController } from "../auth.controller";
 import { AuthService } from "../auth.service";
