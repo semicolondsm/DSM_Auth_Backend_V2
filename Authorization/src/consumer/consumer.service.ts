@@ -1,16 +1,21 @@
 import { Inject, Injectable, Scope } from "@nestjs/common";
 import { REQUEST } from "@nestjs/core";
 import { InjectRepository } from "@nestjs/typeorm";
-import { notFoundUserException } from "../shared/exception/exception.index";
-import { IJwtPayload } from "../shared/jwt/interface/jwt-payload.interface";
+import {
+  notFoundConsumerException,
+  notFoundUserException,
+} from "../shared/exception/exception.index";
 import { User } from "../shared/user/entity/user.entity";
 import { UserRepository } from "../shared/user/entity/user.repository";
 import {
   RegistrationDto,
   RegistrationResponseData,
 } from "./dto/registration.dto";
+import { urlDto } from "./dto/url.dto";
 import { Consumer } from "./entity/consumer.entity";
 import { ConsumerRepository } from "./entity/consumer.repository";
+import { Redirect } from "./entity/redirect.entity";
+import { RedirectRepository } from "./entity/redirect.repository";
 
 @Injectable({ scope: Scope.REQUEST })
 export class ConsumerService {
@@ -18,6 +23,8 @@ export class ConsumerService {
     @InjectRepository(Consumer)
     private readonly consumerRepository: ConsumerRepository,
     @InjectRepository(User) private readonly userRepository: UserRepository,
+    @InjectRepository(Redirect)
+    private readonly redirectRepository: RedirectRepository,
     @Inject(REQUEST) private request,
   ) {}
 
@@ -30,10 +37,30 @@ export class ConsumerService {
     if (!user) {
       throw notFoundUserException;
     }
-    return await this.consumerRepository.registration(dto, user);
+
+    const consumerRecord = await this.consumerRepository.registration(
+      dto,
+      user,
+    );
+    await this.url({
+      client_id: consumerRecord.client_id,
+      redirect_url: dto.redirect_url,
+    });
+    return consumerRecord;
   }
 
   public async list(): Promise<Consumer[]> {
     return await this.consumerRepository.list();
+  }
+
+  public async url(dto: urlDto) {
+    const consumer = await this.consumerRepository.findOne({
+      client_id: dto.client_id,
+    });
+    if (!consumer) {
+      throw notFoundConsumerException;
+    }
+
+    return await this.redirectRepository.url(dto.redirect_url, consumer);
   }
 }
