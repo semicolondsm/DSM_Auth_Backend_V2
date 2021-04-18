@@ -16,13 +16,12 @@ export class ConsumerRepository extends Repository<Consumer> {
     let newConsumers: Consumer;
     const client_id: string = v4().replace(/-/g, "");
     const client_secret: string = v4().replace(/-/g, "");
-
     newConsumers = this.create({
-      name: dto.consumer,
-      user: user,
+      user,
       client_id,
       client_secret,
-      ...dto,
+      name: dto.consumer,
+      domain_url: dto.domain_url,
     });
     await this.save(newConsumers);
     return { client_id, client_secret };
@@ -37,14 +36,15 @@ export class ConsumerRepository extends Repository<Consumer> {
 
   public async myService(userId: number): Promise<Consumer[]> {
     return await this.createQueryBuilder("consumer")
+      .select("GROUP_CONCAT(redirect.redirect_url)", "redirect_url")
+      .addSelect("consumer.name", "name")
+      .addSelect("consumer.domain_url", "domain_url")
+      .addSelect("consumer.client_id", "client_id")
+      .addSelect("consumer.client_secret", "client_secret")
       .innerJoin("consumer.user", "user")
       .innerJoin("consumer.redirects", "redirect")
-      .select("redirect.redirect_url")
-      .addSelect("consumer.name")
-      .addSelect("consumer.domain_url")
-      .addSelect("consumer.client_id")
-      .addSelect("consumer.client_secret")
       .where("user.id = :userId", { userId })
-      .getMany();
+      .groupBy("consumer.id")
+      .getRawMany();
   }
 }

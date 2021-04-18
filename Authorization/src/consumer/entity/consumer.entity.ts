@@ -32,4 +32,6 @@ export class Consumer {
 
   @OneToMany(() => Redirect, (redirect) => redirect.consumer)
   redirects: Redirect[];
+
+  redirect_url: string[] | string;
 }
