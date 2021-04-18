@@ -5,6 +5,7 @@ import { JwtService } from "@nestjs/jwt";
 import {
   ACCESS_TOKEN_EXPIRED_TIME,
   JWT_SECRET_KEY,
+  REFRESH_TOKEN_EXPIRED_TIME,
 } from "../shared/jwt/jwt.constant";
 import { DsmauthLoginDto } from "./dto/dsmauth-login.dto";
 import { IJwtPayload } from "../shared/jwt/interface/jwt-payload.interface";
@@ -14,10 +15,16 @@ import { Consumer } from "../consumer/entity/consumer.entity";
 import { ConsumerRepository } from "../consumer/entity/consumer.repository";
 import {
   badRequestException,
+  forbiddenCodeException,
   unauthorizedPasswordException,
+  unauthorizedSecretKey,
 } from "../shared/exception/exception.index";
 import { v4 } from "uuid";
-import { asyncFuncRedisSet } from "../shared/redis/redis.client";
+import {
+  asyncFuncRedisDel,
+  asyncFuncRedisGet,
+  asyncFuncRedisSet,
+} from "../shared/redis/redis.client";
 
 @Injectable()
 export class DsmauthService {
@@ -59,7 +66,41 @@ export class DsmauthService {
     client_id,
     client_secret,
     code,
-  }: DsmauthProvideTokenDto) {}
+  }: DsmauthProvideTokenDto) {
+    const fineOneConsumerPromise: Promise<Consumer> = this.consumerRepository.findOne(
+      { where: { client_id } },
+    );
+    const getUserIdentityPromise: Promise<string> = asyncFuncRedisGet(code);
+    const consumer: Consumer = await fineOneConsumerPromise;
+    const user_identity: string = await getUserIdentityPromise;
+    if (!consumer || consumer.client_secret !== client_secret) {
+      throw unauthorizedSecretKey;
+    }
+    if (!user_identity) {
+      throw forbiddenCodeException;
+    }
+    const accessToken: string = this.jwtService.sign(
+      { client_id, user_identity, type: "access" },
+      {
+        secret: JWT_SECRET_KEY,
+        expiresIn: ACCESS_TOKEN_EXPIRED_TIME,
+        issuer: "dsm_auth",
+      },
+    );
+    const refreshToken: string = this.jwtService.sign(
+      { client_id, user_identity, type: "refresh" },
+      {
+        secret: JWT_SECRET_KEY,
+        expiresIn: REFRESH_TOKEN_EXPIRED_TIME,
+        issuer: "dsm_auth",
+      },
+    );
+    this.deleteUserIdentityForRedis(code);
+    return {
+      "access-token": accessToken,
+      "refresh-token": refreshToken,
+    };
+  }
 
   public async refreshToken({ user_identity, client_id }: IJwtPayload) {}
 
@@ -74,6 +115,14 @@ export class DsmauthService {
   private async setUserIdentityForRedis(code: string, user_identity: string) {
     try {
       await asyncFuncRedisSet(code, user_identity!, "EX", 90);
+    } catch (err) {
+      Logger.error(err);
+    }
+  }
+
+  private async deleteUserIdentityForRedis(code: string) {
+    try {
+      await asyncFuncRedisDel(code);
     } catch (err) {
       Logger.error(err);
     }
