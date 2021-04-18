@@ -48,10 +48,10 @@ export class DsmauthService {
       redirect_url,
     );
     const exUser: User = await checkExistUserPromise;
-    const exConsumer: Consumer = await checkExistConsumerPromise;
     if (!exUser || !(await bcrypt.compare(password, exUser.password))) {
       throw unauthorizedPasswordException;
     }
+    const exConsumer: Consumer = await checkExistConsumerPromise;
     if (!exConsumer) {
       throw badRequestException;
     }
@@ -72,10 +72,10 @@ export class DsmauthService {
     );
     const getUserIdentityPromise: Promise<string> = asyncFuncRedisGet(code);
     const consumer: Consumer = await fineOneConsumerPromise;
-    const user_identity: string = await getUserIdentityPromise;
     if (!consumer || consumer.client_secret !== client_secret) {
       throw unauthorizedSecretKey;
     }
+    const user_identity: string = await getUserIdentityPromise;
     if (!user_identity) {
       throw forbiddenCodeException;
     }

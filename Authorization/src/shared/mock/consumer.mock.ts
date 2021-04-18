@@ -34,6 +34,8 @@ export class MockConsumerRepository {
   public findOne(args: any) {
     if (!args) {
       return new Consumer();
+    } else if (args.client_id) {
+      return new Consumer();
     } else {
       if (args.where.client_id === "exist_client_id") {
         const consumer: Consumer = new Consumer();

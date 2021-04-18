@@ -22,6 +22,7 @@ export class DsmauthController {
     return this.dsmauthService.provideToken(body);
   }
 
+  @UseGuards(AuthGuard("jwt-refresh"))
   @UseGuards(new JwtBearerGuard(REFRESH_TOKEN_HEADER))
   @Get("refresh")
   async refreshToken(@Req() req: IUserReqeust) {
