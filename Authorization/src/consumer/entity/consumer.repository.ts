@@ -47,4 +47,16 @@ export class ConsumerRepository extends Repository<Consumer> {
       .groupBy("consumer.id")
       .getRawMany();
   }
+
+  public getConsumerByRedirectUrl(
+    client_id: string,
+    redirect_url: string,
+  ): Promise<Consumer> {
+    return this.createQueryBuilder("consumer")
+      .select("consumer.id")
+      .leftJoin("consumer.redirects", "redirects")
+      .where("consumer.client_id = :client_id", { client_id })
+      .andWhere("redirects.redirect_url = :redirect_url", { redirect_url })
+      .getOne();
+  }
 }
