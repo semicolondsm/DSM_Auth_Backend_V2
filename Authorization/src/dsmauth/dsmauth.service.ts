@@ -102,7 +102,18 @@ export class DsmauthService {
     };
   }
 
-  public async refreshToken({ user_identity, client_id }: IJwtPayload) {}
+  public async refreshToken({ user_identity, client_id }: IJwtPayload) {
+    return {
+      "access-token": this.jwtService.sign(
+        { client_id, user_identity, type: "access" },
+        {
+          secret: JWT_SECRET_KEY,
+          expiresIn: ACCESS_TOKEN_EXPIRED_TIME,
+          issuer: "dsm_auth",
+        },
+      ),
+    };
+  }
 
   public async validationUser(identity: string, password: string) {
     const user = await this.userService.findByIdentity(identity);

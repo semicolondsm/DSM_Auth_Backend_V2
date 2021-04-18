@@ -20,7 +20,6 @@ import {
   unauthorizedSecretKey,
 } from "../../shared/exception/exception.index";
 import { MockJwtSrvice } from "../../shared/mock/jwt.mock";
-import { isByteLength } from "class-validator";
 
 jest.mock("bcrypt", () => ({
   async compare(password: string, encrypted: string) {
@@ -147,6 +146,20 @@ describe("DsmauthService", () => {
       expect(service.provideToken(body)).resolves.toEqual({
         "access-token": "accesstoken with exist_client_id tester",
         "refresh-token": "refreshtoken with exist_client_id tester",
+      });
+    });
+  });
+
+  describe("refreshToken", () => {
+    it("should return refresh token", () => {
+      expect(
+        service.refreshToken({
+          user_identity: "tester",
+          client_id: "retreshToken",
+          type: "refresh",
+        }),
+      ).resolves.toEqual({
+        "access-token": "accesstoken with retreshToken tester",
       });
     });
   });

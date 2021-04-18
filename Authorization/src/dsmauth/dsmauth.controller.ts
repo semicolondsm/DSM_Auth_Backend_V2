@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { JwtBearerGuard } from "../shared/jwt/guard/jwt-bearer.guard";
 import { REFRESH_TOKEN_HEADER } from "../shared/jwt/jwt.constant";
@@ -20,5 +20,11 @@ export class DsmauthController {
   @Post("token")
   async provideToken(@Body() body: DsmauthProvideTokenDto) {
     return this.dsmauthService.provideToken(body);
+  }
+
+  @UseGuards(new JwtBearerGuard(REFRESH_TOKEN_HEADER))
+  @Get("refresh")
+  async refreshToken(@Req() req: IUserReqeust) {
+    return this.dsmauthService.refreshToken(req.user);
   }
 }
