@@ -52,7 +52,7 @@ jest.mock("../../shared/mail/mail.transport", () => ({
   },
 }));
 
-jest.mock("../../redis.client", () => ({
+jest.mock("../../shared/redis/redis.client", () => ({
   asyncFuncRedisSet(email: string, authNum: string) {
     console.log(`save for to ${email} with ${authNum}`);
   },
