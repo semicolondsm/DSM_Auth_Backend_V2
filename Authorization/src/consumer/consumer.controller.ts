@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
+import { ACCESS_TOKEN_HEADER } from "../shared/jwt/jwt.constant";
 import { JwtBearerGuard } from "../shared/jwt/guard/jwt-bearer.guard";
 import { ConsumerService } from "./consumer.service";
 import {
@@ -14,6 +15,7 @@ export class ConsumerController {
   constructor(private readonly consumerService: ConsumerService) {}
 
   @UseGuards(AuthGuard("jwt"))
+  @UseGuards(new JwtBearerGuard(ACCESS_TOKEN_HEADER))
   @Post("registration")
   public async registration(
     @Body() dto: RegistrationDto,
@@ -27,7 +29,7 @@ export class ConsumerController {
   }
 
   @UseGuards(AuthGuard("jwt"))
-  @UseGuards(new JwtBearerGuard("access-token"))
+  @UseGuards(new JwtBearerGuard(ACCESS_TOKEN_HEADER))
   @Post("url")
   public async url(@Body() dto: urlDto): Promise<{ message: string }> {
     await this.consumerService.url(dto);
