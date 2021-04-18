@@ -7,7 +7,7 @@ export class DsmauthProvideTokenDto {
 
   @IsString()
   @Length(1, 200)
-	client_secret: string;
+  client_secret: string;
 
   @IsString()
   @Length(1, 200)

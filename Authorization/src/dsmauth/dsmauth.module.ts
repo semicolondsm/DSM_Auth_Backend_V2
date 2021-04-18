@@ -10,9 +10,17 @@ import {
   JwtRefreshStrategy,
   JwtStrategy,
 } from "../shared/jwt/passport/jwt.strategy";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { ConsumerRepository } from "../consumer/entity/consumer.repository";
 
 @Module({
-  imports: [ConfigModule, PassportModule, UserModule, JwtModule.register({})],
+  imports: [
+    ConfigModule,
+    PassportModule,
+    UserModule,
+    JwtModule.register({}),
+    TypeOrmModule.forFeature([ConsumerRepository]),
+  ],
   providers: [DsmauthService, LocalStrategy, JwtStrategy, JwtRefreshStrategy],
   controllers: [DsmauthController],
 })
