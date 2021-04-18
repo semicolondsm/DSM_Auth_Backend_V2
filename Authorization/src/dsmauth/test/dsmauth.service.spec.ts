@@ -1,4 +1,4 @@
-import { JwtModule } from "@nestjs/jwt";
+import { JwtModule, JwtService } from "@nestjs/jwt";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { User } from "../../shared/user/entity/user.entity";
@@ -15,8 +15,11 @@ import { DsmauthProvideTokenDto } from "../dto/dsmauth-token.dto";
 import { DsmauthLoginDto } from "../dto/dsmauth-login.dto";
 import {
   badRequestException,
+  forbiddenCodeException,
   unauthorizedPasswordException,
+  unauthorizedSecretKey,
 } from "../../shared/exception/exception.index";
+import { MockJwtSrvice } from "../../shared/mock/jwt.mock";
 
 jest.mock("bcrypt", () => ({
   async compare(password: string, encrypted: string) {
@@ -33,6 +36,14 @@ jest.mock("../../shared/redis/redis.client", () => ({
     expect(code).toEqual("redirect_code");
     expect(user_identity).toEqual("tester");
   },
+  asyncFuncRedisDel(code: string) {
+    expect(code).toEqual("rightCode");
+  },
+  asyncFuncRedisGet(code: string) {
+    if(code === "rightCode") {
+      return "tester";
+    }
+  }
 }));
 
 jest.mock("uuid", () => ({
@@ -61,6 +72,10 @@ describe("DsmauthService", () => {
           provide: getRepositoryToken(Consumer),
           useClass: MockConsumerRepository,
         },
+        {
+          provide: JwtService,
+          useClass: MockJwtSrvice,
+        }
       ],
       controllers: [DsmauthController],
     }).compile();
@@ -102,6 +117,29 @@ describe("DsmauthService", () => {
     it("should success", () => {
       expect(service.login(body)).resolves.toEqual({
         location: "http://test.redirecturl.com?code=redirect_code",
+      });
+    });
+  });
+
+  describe("provideToken", () => {
+    const body: DsmauthProvideTokenDto = {
+      client_id: "exist_client_id",
+      client_secret: "right_client_secret",
+      code: "rightCode",
+    };
+    it("should throw unauthorized secret key error because not exist consumer", () => {
+      expect(service.provideToken({ ...body, client_id: "zalgo" })).rejects.toEqual(unauthorizedSecretKey);
+    });
+    it("should throw unauthorized secret key error because not match client secret", () => {
+      expect(service.provideToken({ ...body, client_secret: "zalgo" })).rejects.toEqual(unauthorizedSecretKey);
+    });
+    it("should throw forbidden code error", () => {
+      expect(service.provideToken({ ...body, code: "zalgo" })).rejects.toEqual(forbiddenCodeException);
+    });
+    it("should return token", () => {
+      expect(service.provideToken(body)).resolves.toEqual({
+        "access-token": "accesstoken with exist_client_id tester",
+        "refresh-token": "refreshtoken with exist_client_id tester",
       });
     });
   });
