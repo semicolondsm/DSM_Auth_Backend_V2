@@ -34,6 +34,12 @@ export class MockConsumerRepository {
   public findOne() {
     return new Consumer();
   }
+
+  public async getConsumerByRedirectUrl(client_id: string, redirect_url: string) {
+    if(client_id === "exist_client_id" && redirect_url === "http://test.redirecturl.com") {
+      return new Consumer();
+    } 
+  }
 }
 
 export class MockConsumerService {
