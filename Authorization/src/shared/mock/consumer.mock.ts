@@ -31,8 +31,16 @@ export class MockConsumerRepository {
     return consumers;
   }
 
-  public findOne() {
-    return new Consumer();
+  public findOne(args: any) {
+    if(!args) {
+      return new Consumer();
+    } else {
+      if(args.where.client_id === "exist_client_id") {
+        const consumer: Consumer = new Consumer();
+        consumer.client_secret = "right_client_secret";
+        return consumer;
+      }
+    }
   }
 
   public async getConsumerByRedirectUrl(
