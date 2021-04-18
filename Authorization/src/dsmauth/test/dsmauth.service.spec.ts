@@ -20,6 +20,7 @@ import {
   unauthorizedSecretKey,
 } from "../../shared/exception/exception.index";
 import { MockJwtSrvice } from "../../shared/mock/jwt.mock";
+import { isByteLength } from "class-validator";
 
 jest.mock("bcrypt", () => ({
   async compare(password: string, encrypted: string) {
@@ -40,10 +41,10 @@ jest.mock("../../shared/redis/redis.client", () => ({
     expect(code).toEqual("rightCode");
   },
   asyncFuncRedisGet(code: string) {
-    if(code === "rightCode") {
+    if (code === "rightCode") {
       return "tester";
     }
-  }
+  },
 }));
 
 jest.mock("uuid", () => ({
@@ -75,7 +76,7 @@ describe("DsmauthService", () => {
         {
           provide: JwtService,
           useClass: MockJwtSrvice,
-        }
+        },
       ],
       controllers: [DsmauthController],
     }).compile();
@@ -128,13 +129,19 @@ describe("DsmauthService", () => {
       code: "rightCode",
     };
     it("should throw unauthorized secret key error because not exist consumer", () => {
-      expect(service.provideToken({ ...body, client_id: "zalgo" })).rejects.toEqual(unauthorizedSecretKey);
+      expect(
+        service.provideToken({ ...body, client_id: "zalgo" }),
+      ).rejects.toEqual(unauthorizedSecretKey);
     });
     it("should throw unauthorized secret key error because not match client secret", () => {
-      expect(service.provideToken({ ...body, client_secret: "zalgo" })).rejects.toEqual(unauthorizedSecretKey);
+      expect(
+        service.provideToken({ ...body, client_secret: "zalgo" }),
+      ).rejects.toEqual(unauthorizedSecretKey);
     });
     it("should throw forbidden code error", () => {
-      expect(service.provideToken({ ...body, code: "zalgo" })).rejects.toEqual(forbiddenCodeException);
+      expect(service.provideToken({ ...body, code: "zalgo" })).rejects.toEqual(
+        forbiddenCodeException,
+      );
     });
     it("should return token", () => {
       expect(service.provideToken(body)).resolves.toEqual({

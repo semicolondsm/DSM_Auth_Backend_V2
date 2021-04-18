@@ -3,7 +3,9 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import {
   badRequestException,
+  forbiddenCodeException,
   unauthorizedPasswordException,
+  unauthorizedSecretKey,
 } from "../../shared/exception/exception.index";
 import { Consumer } from "../../consumer/entity/consumer.entity";
 import { MockConsumerRepository } from "../../shared/mock/consumer.mock";
@@ -17,6 +19,7 @@ import { DsmauthController } from "../dsmauth.controller";
 import { DsmauthService } from "../dsmauth.service";
 import { DsmauthLoginDto } from "../dto/dsmauth-login.dto";
 import { MockDsmauthService } from "../../shared/mock/dsmauth.mock";
+import { DsmauthProvideTokenDto } from "../dto/dsmauth-token.dto";
 
 describe("DsmauthController", () => {
   let controller: DsmauthController;
@@ -83,6 +86,35 @@ describe("DsmauthController", () => {
     it("should success", () => {
       expect(controller.login(body)).resolves.toEqual({
         location: "http://test.redirecturl.com?code=redirect_code",
+      });
+    });
+  });
+
+  describe("provideToken", () => {
+    const body: DsmauthProvideTokenDto = {
+      client_id: "exist_client_id",
+      client_secret: "right_client_secret",
+      code: "rightCode",
+    };
+    it("should throw unauthorized secret key error because not exist consumer", () => {
+      expect(
+        controller.provideToken({ ...body, client_id: "zalgo" }),
+      ).rejects.toEqual(unauthorizedSecretKey);
+    });
+    it("should throw unauthorized secret key error because not match client secret", () => {
+      expect(
+        controller.provideToken({ ...body, client_secret: "zalgo" }),
+      ).rejects.toEqual(unauthorizedSecretKey);
+    });
+    it("should throw forbidden code error", () => {
+      expect(
+        controller.provideToken({ ...body, code: "zalgo" }),
+      ).rejects.toEqual(forbiddenCodeException);
+    });
+    it("should return token", () => {
+      expect(controller.provideToken(body)).resolves.toEqual({
+        "access-token": "access_token",
+        "refresh-token": "refresh_token",
       });
     });
   });
