@@ -24,6 +24,13 @@ export class AppService {
     if (!user) {
       throw notFoundUserException;
     }
-    return await this.consumerRepository.myService(user.id);
+    const consumers: Consumer[] = await this.consumerRepository.myService(
+      user.id,
+    );
+    return consumers.map((consumer: Consumer) => {
+      const deserializeUrl: string = consumer.redirect_url as string;
+      consumer.redirect_url = deserializeUrl.split(",");
+      return consumer;
+    });
   }
 }

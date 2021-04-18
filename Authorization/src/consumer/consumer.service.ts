@@ -50,7 +50,7 @@ export class ConsumerService {
   }
 
   public async list(): Promise<Consumer[]> {
-    return await this.consumerRepository.list();
+    return this.consumerRepository.list();
   }
 
   public async url(dto: urlDto) {
