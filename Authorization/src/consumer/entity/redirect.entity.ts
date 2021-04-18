@@ -1,4 +1,3 @@
-import { User } from "../../shared/user/entity/user.entity";
 import {
   Column,
   Entity,
@@ -17,6 +16,6 @@ export class Redirect {
   redirect_url: string;
 
   @ManyToOne(() => Consumer, (consumer) => consumer.redirects)
-  @JoinColumn({ name: "consumer_id" })
+  @JoinColumn({ name: "consumerId" })
   consumer: Consumer;
 }

@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
+import { JwtBearerGuard } from "../shared/jwt/guard/jwt-bearer.guard";
 import { ConsumerService } from "./consumer.service";
 import {
   RegistrationDto,
@@ -26,6 +27,7 @@ export class ConsumerController {
   }
 
   @UseGuards(AuthGuard("jwt"))
+  @UseGuards(new JwtBearerGuard("access-token"))
   @Post("url")
   public async url(@Body() dto: urlDto): Promise<{ message: string }> {
     await this.consumerService.url(dto);
