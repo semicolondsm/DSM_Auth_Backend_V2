@@ -17,7 +17,7 @@ import {
   unauthorizedPasswordException,
 } from "../shared/exception/exception.index";
 import { v4 } from "uuid";
-import { asyncFuncRedisSet } from "src/shared/redis/redis.client";
+import { asyncFuncRedisSet } from "../shared/redis/redis.client";
 
 @Injectable()
 export class DsmauthService {
