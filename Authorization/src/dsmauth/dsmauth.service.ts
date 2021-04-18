@@ -8,6 +8,7 @@ import {
 } from "../shared/jwt/jwt.constant";
 import { DsmauthLoginDto } from "./dto/dsmauth-login.dto";
 import { IJwtPayload } from "../shared/jwt/interface/jwt-payload.interface";
+import { DsmauthProvideTokenDto } from "./dto/dsmauth-token.dto";
 
 @Injectable()
 export class DsmauthService {
@@ -27,6 +28,8 @@ export class DsmauthService {
       ),
     };
   }
+
+  public async provideToken({ client_id, client_secret, code }: DsmauthProvideTokenDto) {}
 
   public async refreshToken({ user_identity, client_id }: IJwtPayload) {}
 
