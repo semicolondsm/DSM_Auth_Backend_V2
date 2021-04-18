@@ -61,16 +61,24 @@ describe("DsmauthController", () => {
       password: "rightPassword",
     };
     it("should throw unauthorized password error because not exist user", () => {
-      expect(controller.login({ ...body, id: "zalgo" })).rejects.toEqual(unauthorizedPasswordException);
+      expect(controller.login({ ...body, id: "zalgo" })).rejects.toEqual(
+        unauthorizedPasswordException,
+      );
     });
     it("should throw unauthorized password error because", () => {
-      expect(controller.login({ ...body, password: "zalgo" })).rejects.toEqual(unauthorizedPasswordException);
+      expect(controller.login({ ...body, password: "zalgo" })).rejects.toEqual(
+        unauthorizedPasswordException,
+      );
     });
     it("should throw bas request error because not match client_id", () => {
-      expect(controller.login({ ...body, client_id: "zalgo" })).rejects.toEqual(badRequestException);
+      expect(controller.login({ ...body, client_id: "zalgo" })).rejects.toEqual(
+        badRequestException,
+      );
     });
     it("should throw bas request error because not match redirect_url", () => {
-      expect(controller.login({ ...body, redirect_url: "zalgo" }),).rejects.toEqual(badRequestException);
+      expect(
+        controller.login({ ...body, redirect_url: "zalgo" }),
+      ).rejects.toEqual(badRequestException);
     });
     it("should success", () => {
       expect(controller.login(body)).resolves.toEqual({
