@@ -1,5 +1,5 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { asyncFuncRedisGet, asyncFuncRedisSet } from "../redis.client";
+import { asyncFuncRedisGet, asyncFuncRedisSet } from "../shared/redis/redis.client";
 import { User } from "../shared/user/entity/user.entity";
 import {
   alreadySignupException,
