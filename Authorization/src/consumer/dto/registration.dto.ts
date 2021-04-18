@@ -1,4 +1,4 @@
-import { IsString, Length } from "class-validator";
+import { IsString, IsUrl, Length } from "class-validator";
 
 export class RegistrationDto {
   @IsString()
@@ -6,10 +6,12 @@ export class RegistrationDto {
   consumer: string;
 
   @IsString()
+  @IsUrl()
   @Length(1, 100)
   domain_url: string;
 
   @IsString()
+  @IsUrl()
   @Length(1, 200)
   redirect_url: string;
 }

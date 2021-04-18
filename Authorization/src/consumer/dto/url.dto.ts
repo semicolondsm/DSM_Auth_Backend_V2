@@ -1,4 +1,4 @@
-import { IsString, Length } from "class-validator";
+import { IsString, IsUrl, Length } from "class-validator";
 
 export class urlDto {
   @IsString()
@@ -6,6 +6,7 @@ export class urlDto {
   client_id: string;
 
   @IsString()
+  @IsUrl()
   @Length(1, 200)
   redirect_url: string;
 }
