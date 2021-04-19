@@ -7,14 +7,6 @@ import {
   unauthorizedSecretKey,
 } from "../exception/exception.index";
 
-/**
-
-client_id: "exist_client_id",
-      redirect_url: "http://test.redirecturl.com",
-      id: "existId",
-      password: "rightPassword",
- */
-
 export class MockDsmauthService {
   public async login({
     client_id,

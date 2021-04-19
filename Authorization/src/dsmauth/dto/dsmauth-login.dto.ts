@@ -1,4 +1,4 @@
-import { IsString, Length } from "class-validator";
+import { IsString, IsUrl, Length } from "class-validator";
 
 export class DsmauthLoginDto {
   @IsString()
@@ -10,6 +10,7 @@ export class DsmauthLoginDto {
   password: string;
 
   @IsString()
+  @IsUrl()
   @Length(1, 200)
   redirect_url: string;
 

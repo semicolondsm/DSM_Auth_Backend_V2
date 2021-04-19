@@ -1,6 +1,7 @@
 import { Inject, Injectable, Scope } from "@nestjs/common";
 import { REQUEST } from "@nestjs/core";
 import { InjectRepository } from "@nestjs/typeorm";
+import { IUserReqeust } from "../shared/user/interface/user-request.interface";
 import {
   notFoundConsumerException,
   notFoundUserException,
@@ -25,7 +26,7 @@ export class ConsumerService {
     @InjectRepository(User) private readonly userRepository: UserRepository,
     @InjectRepository(Redirect)
     private readonly redirectRepository: RedirectRepository,
-    @Inject(REQUEST) private request,
+    @Inject(REQUEST) private request: IUserReqeust,
   ) {}
 
   public async registration(
