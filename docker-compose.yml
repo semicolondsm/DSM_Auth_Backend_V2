@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  dsmauth:
+    image: node:dsmauth
+    build: ./Authorization
+    ports:
+      - "3001:8080"
+    container_name: dsmauth
