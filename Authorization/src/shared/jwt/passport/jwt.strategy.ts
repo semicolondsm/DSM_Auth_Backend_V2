@@ -1,15 +1,19 @@
 import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
-import { unauthorizedTokenException } from "src/shared/exception/exception.index";
+import { unauthorizedTokenException } from "../../../shared/exception/exception.index";
 import { IJwtPayload } from "../interface/jwt-payload.interface";
-import { JWT_SECRET_KEY } from "../jwt.constant";
+import {
+  ACCESS_TOKEN_HEADER,
+  JWT_SECRET_KEY,
+  REFRESH_TOKEN_HEADER,
+} from "../jwt.constant";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromHeader(ACCESS_TOKEN_HEADER),
       ignoreExpiration: false,
       secretOrKey: JWT_SECRET_KEY,
     });
@@ -30,7 +34,7 @@ export class JwtRefreshStrategy extends PassportStrategy(
 ) {
   constructor() {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromHeader(REFRESH_TOKEN_HEADER),
       ignoreExpiration: false,
       secretOrKey: JWT_SECRET_KEY,
     });

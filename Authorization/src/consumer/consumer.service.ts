@@ -1,41 +1,67 @@
 import { Inject, Injectable, Scope } from "@nestjs/common";
 import { REQUEST } from "@nestjs/core";
 import { InjectRepository } from "@nestjs/typeorm";
-import { notFoundUserException } from "../shared/exception/exception.index";
-import { IJwtPayload } from "../shared/jwt/interface/jwt-payload.interface";
+import { IUserReqeust } from "../shared/user/interface/user-request.interface";
+import {
+  notFoundConsumerException,
+  notFoundUserException,
+} from "../shared/exception/exception.index";
 import { User } from "../shared/user/entity/user.entity";
 import { UserRepository } from "../shared/user/entity/user.repository";
 import {
   RegistrationDto,
   RegistrationResponseData,
 } from "./dto/registration.dto";
-import { Consumers } from "./entity/consumer.entity";
-import { ConsumersRepository } from "./entity/consumer.repository";
+import { urlDto } from "./dto/url.dto";
+import { Consumer } from "./entity/consumer.entity";
+import { ConsumerRepository } from "./entity/consumer.repository";
+import { Redirect } from "./entity/redirect.entity";
+import { RedirectRepository } from "./entity/redirect.repository";
 
 @Injectable({ scope: Scope.REQUEST })
 export class ConsumerService {
   constructor(
-    @InjectRepository(Consumers)
-    private readonly consumerRepository: ConsumersRepository,
+    @InjectRepository(Consumer)
+    private readonly consumerRepository: ConsumerRepository,
     @InjectRepository(User) private readonly userRepository: UserRepository,
-    @Inject(REQUEST) private request,
+    @InjectRepository(Redirect)
+    private readonly redirectRepository: RedirectRepository,
+    @Inject(REQUEST) private request: IUserReqeust,
   ) {}
 
   public async registration(
     dto: RegistrationDto,
   ): Promise<RegistrationResponseData> {
-    const user: User = await this.getUser();
+    const user: User = await this.userRepository.findByRequest(
+      this.request.user,
+    );
     if (!user) {
       throw notFoundUserException;
     }
-    return this.consumerRepository.registration(dto, user);
+
+    const consumerRecord = await this.consumerRepository.registration(
+      dto,
+      user,
+    );
+    await this.url({
+      client_id: consumerRecord.client_id,
+      redirect_url: dto.redirect_url,
+    });
+    return consumerRecord;
   }
 
-  private async getUser(): Promise<User> {
-    const payload = this.request.user as IJwtPayload;
-    const user = await this.userRepository.findOne({
-      identity: payload.user_identity,
+  public async list(): Promise<Consumer[]> {
+    return this.consumerRepository.list();
+  }
+
+  public async url(dto: urlDto) {
+    const consumer = await this.consumerRepository.findOne({
+      client_id: dto.client_id,
     });
-    return user;
+    if (!consumer) {
+      throw notFoundConsumerException;
+    }
+
+    return await this.redirectRepository.url(dto.redirect_url, consumer);
   }
 }

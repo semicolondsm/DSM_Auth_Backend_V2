@@ -1,25 +1,20 @@
 import { Module } from "@nestjs/common";
-import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthModule } from "../auth/auth.module";
 import { DsmauthModule } from "../dsmauth/dsmauth.module";
-import { connectionOptions } from "src/ormconfig";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { APP_FILTER } from "@nestjs/core";
 import { HttpErrorFilter } from "../shared/exception/exception.filter";
 import { ConsumerModule } from "../consumer/consumer.module";
+import { ConsumerRepository } from "../consumer/entity/consumer.repository";
+import { UserRepository } from "../shared/user/entity/user.repository";
+import { TypeOrmConfigModule } from "../typeorm/typeorm-config.module";
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      load: [() => connectionOptions],
-    }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (config: ConfigService) => config.get(process.env.NODE_ENV),
-      inject: [ConfigService],
-    }),
+    TypeOrmConfigModule,
+    TypeOrmModule.forFeature([ConsumerRepository, UserRepository]),
     AuthModule,
     DsmauthModule,
     ConsumerModule,

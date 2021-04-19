@@ -4,11 +4,13 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Redirect } from "./redirect.entity";
 
 @Entity("consumers")
-export class Consumers {
+export class Consumer {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -17,9 +19,6 @@ export class Consumers {
 
   @Column({ length: 100, nullable: true })
   domain_url: string;
-
-  @Column({ length: 200 })
-  redirect_url: string;
 
   @Column({ length: 100 })
   client_id: string;
@@ -30,4 +29,9 @@ export class Consumers {
   @ManyToOne(() => User, (user) => user.consumers)
   @JoinColumn({ name: "UserId" })
   user: User;
+
+  @OneToMany(() => Redirect, (redirect) => redirect.consumer)
+  redirects: Redirect[];
+
+  redirect_url: string[] | string;
 }

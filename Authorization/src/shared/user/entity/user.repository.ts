@@ -1,3 +1,4 @@
+import { IJwtPayload } from "src/shared/jwt/interface/jwt-payload.interface";
 import { EntityRepository, Repository } from "typeorm";
 import { User } from "./user.entity";
 
@@ -12,5 +13,20 @@ export class UserRepository extends Repository<User> {
       return true;
     }
     return false;
+  }
+
+  public findByNameAndEmail(name: string, email: string): Promise<User> {
+    return this.createQueryBuilder("user")
+      .where("user.name = :name", { name })
+      .andWhere("user.email = :email", { email })
+      .getOne();
+  }
+
+  public findByRequest(payload: IJwtPayload): Promise<User> {
+    return this.createQueryBuilder("user")
+      .where("user.identity = :identity", {
+        identity: payload.user_identity,
+      })
+      .getOne();
   }
 }
