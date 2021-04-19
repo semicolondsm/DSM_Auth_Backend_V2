@@ -72,7 +72,14 @@ export class MockUserRepository {
 }
 
 export class MockUserService {
-  public findByIdentity(identity: number) {}
+  public async findByIdentity(identity: string) {
+    if (identity === "existId") {
+      const user = new User();
+      user.identity = "tester";
+      user.password = "test_password";
+      return user;
+    }
+  }
 }
 
 export class MockAuthService {

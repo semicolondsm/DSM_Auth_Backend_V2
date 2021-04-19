@@ -9,6 +9,7 @@ const redisClient: redis.RedisClient = redis.createClient({
 
 const asyncFuncRedisGet = promisify(redisClient.get).bind(redisClient);
 const asyncFuncRedisSet = promisify(redisClient.set).bind(redisClient);
+const asyncFuncRedisDel = promisify(redisClient.del).bind(redisClient);
 
 export default redisClient;
-export { asyncFuncRedisGet, asyncFuncRedisSet };
+export { asyncFuncRedisGet, asyncFuncRedisSet, asyncFuncRedisDel };
