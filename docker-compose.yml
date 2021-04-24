@@ -5,5 +5,5 @@ services:
     image: node:dsmauth
     build: ./Authorization
     ports:
-      - "3001:8080"
+      - "3001:3000"
     container_name: dsmauth

@@ -9,6 +9,6 @@ RUN npx tsc
 
 ENV NODE_ENV production
 
-EXPOSE 8080
+EXPOSE 3000
 
 CMD ["node", "./dist/main.js"]
