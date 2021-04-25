@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { TypeOrmModule, TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { EnvironmentConfigModule } from "../environment-config/environment-config.module";
 import { EnvironmentConfigService } from "../environment-config/environment-config.service";
+import { UserEntity } from "../../repository/entity/user.entity";
 
 export const getTypeOrmModuleOptions = (
   environmentConfigService: EnvironmentConfigService,
@@ -12,7 +13,7 @@ export const getTypeOrmModuleOptions = (
   username: environmentConfigService.get("PRODUCTION_DATABASE_USER"),
   password: environmentConfigService.get("PRODUCTION_DATABASE_PASSWORD"),
   database: environmentConfigService.get("PRODUCTION_DATABASE_NAME"),
-  entities: [],
+  entities: [UserEntity],
 });
 
 @Module({
