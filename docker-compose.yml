@@ -7,9 +7,9 @@ services:
     ports:
       - "3001:3000"
     container_name: dsmauth
-    :
-    image: node:  
+  dsmapi:
+    image: node:dsmapi
     build: ./Resource
     ports: 
       - "8443:3000"
-    container_name:   
+    container_name: dsmapi
