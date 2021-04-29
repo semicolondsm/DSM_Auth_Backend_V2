@@ -38,7 +38,7 @@ jobs:
         run: | 
           cd Authorization/
           npm ci
-          npm run test:cov
+          npm run test
         env: 
           REDIS_HOST: ${{ secrets.REDIS_HOST }}
           REDIS_PORT: ${{ secrets.REDIS_PORT }}
