@@ -33,7 +33,7 @@ jobs:
       - name: Run a one-line script
         run: echo Hello World
 
-      # Runs a set of commands using the runners shell
+      # Runs Authorization Server Test
       - name: Run Authorization Server Test
         run: | 
           cd Authorization/
@@ -43,3 +43,10 @@ jobs:
           REDIS_HOST: ${{ secrets.REDIS_HOST }}
           REDIS_PORT: ${{ secrets.REDIS_PORT }}
           REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+
+      # Runs Resource Server Test
+      - name: Run Resource Server Test
+        run: |
+          cd Resource/
+          npm ci
+          npm run test
