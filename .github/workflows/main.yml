@@ -34,7 +34,8 @@ jobs:
         run: echo Hello, world!
 
       # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Run Authorization Server Test
         run: 
+          cd ./Authorization
           npm ci,
           npm test
