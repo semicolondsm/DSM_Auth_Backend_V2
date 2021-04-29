@@ -36,6 +36,8 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Run Authorization Server Test
         run: | 
+          ls, 
+          pwd,
           cd ./Authorization,
           npm ci,
           npm test
