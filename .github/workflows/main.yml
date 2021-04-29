@@ -31,7 +31,9 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: pwd
+        run: |
+          pwd,
+          ls
 
       # Runs a set of commands using the runners shell
       - name: Run Authorization Server Test
