@@ -31,13 +31,11 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: |
-          pwd
-          ls
+        run: echo Hello World
 
       # Runs a set of commands using the runners shell
       - name: Run Authorization Server Test
         run: | 
-          cd Authorization/,
-          npm ci,
+          cd Authorization/
+          npm ci
           npm test
