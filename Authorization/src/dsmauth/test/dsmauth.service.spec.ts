@@ -144,8 +144,8 @@ describe("DsmauthService", () => {
     });
     it("should return token", () => {
       expect(service.provideToken(body)).resolves.toEqual({
-        "access-token": "accesstoken with exist_client_id tester",
-        "refresh-token": "refreshtoken with exist_client_id tester",
+        access_token: "accesstoken with exist_client_id tester",
+        refresh_token: "refreshtoken with exist_client_id tester",
       });
     });
   });
@@ -159,7 +159,7 @@ describe("DsmauthService", () => {
           type: "refresh",
         }),
       ).resolves.toEqual({
-        "access-token": "accesstoken with retreshToken tester",
+        access_token: "accesstoken with retreshToken tester",
       });
     });
   });

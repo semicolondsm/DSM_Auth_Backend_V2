@@ -97,14 +97,14 @@ export class DsmauthService {
     );
     this.deleteUserIdentityForRedis(code);
     return {
-      "access-token": accessToken,
-      "refresh-token": refreshToken,
+      access_token: accessToken,
+      refresh_token: refreshToken,
     };
   }
 
   public async refreshToken({ user_identity, client_id }: IJwtPayload) {
     return {
-      "access-token": this.jwtService.sign(
+      access_token: this.jwtService.sign(
         { client_id, user_identity, type: "access" },
         {
           secret: JWT_SECRET_KEY,
