@@ -3,17 +3,13 @@ import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { unauthorizedTokenException } from "../../../shared/exception/exception.index";
 import { IJwtPayload } from "../interface/jwt-payload.interface";
-import {
-  ACCESS_TOKEN_HEADER,
-  JWT_SECRET_KEY,
-  REFRESH_TOKEN_HEADER,
-} from "../jwt.constant";
+import { JWT_SECRET_KEY, REFRESH_TOKEN_HEADER } from "../jwt.constant";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
     super({
-      jwtFromRequest: ExtractJwt.fromHeader(ACCESS_TOKEN_HEADER),
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
       secretOrKey: JWT_SECRET_KEY,
     });
