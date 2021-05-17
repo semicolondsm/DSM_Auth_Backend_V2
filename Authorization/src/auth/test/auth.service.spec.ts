@@ -1,5 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
+import { MockUserRepository } from "../../shared/mock/user.mock";
 import {
   alreadySignupException,
   notFoundEmailException,
@@ -9,42 +10,6 @@ import { User } from "../../shared/user/entity/user.entity";
 import { AuthController } from "../auth.controller";
 import { AuthService } from "../auth.service";
 import { SignUpDto } from "../dto/sign-up.dto";
-
-class MockRepository {
-  public async checkExist(identity: string): Promise<boolean> {
-    if (identity === "tester") {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  public async findOne({ where: { email } }): Promise<User> {
-    if (email === "201216jjw@dsm.hs.kr") {
-      return new User();
-    } else if (email === "alreadysignupeamil@dsm.hs.kr") {
-      const user = new User();
-      user.password = "exist";
-      return user;
-    }
-  }
-
-  public async findByNameAndEmail(name: string, email: string): Promise<User> {
-    if (email === "rightKey") {
-      const user = new User();
-      if (name === "tester") {
-        return user;
-      } else if (name === "signedTester") {
-        user.password = "alreadySignupPassword";
-        return user;
-      }
-    }
-  }
-
-  public async save(user: SignUpDto) {
-    expect(user).toEqual({ identity: "id", password: "hashedpassword" });
-  }
-}
 
 jest.mock("../../shared/mail/mail.transport", () => ({
   sendMail(email: string, authNum: string) {
@@ -80,7 +45,7 @@ describe("AuthService", () => {
         AuthService,
         {
           provide: getRepositoryToken(User),
-          useClass: MockRepository,
+          useClass: MockUserRepository,
         },
       ],
       controllers: [AuthController],
