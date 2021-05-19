@@ -27,8 +27,10 @@ export class ConsumerController {
 
   @UseGuards(AuthGuard("jwt"))
   @Post("url")
-  public async url(@Body() dto: urlDto): Promise<{ message: string }> {
-    await this.consumerService.url(dto);
+  public async addConsumerRedirectUrl(
+    @Body() dto: urlDto,
+  ): Promise<{ message: string }> {
+    await this.consumerService.addConsumerRedirectUrl(dto);
     return { message: "success" };
   }
 }

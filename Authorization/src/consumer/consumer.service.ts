@@ -15,8 +15,7 @@ import {
 import { urlDto } from "./dto/url.dto";
 import { Consumer } from "./entity/consumer.entity";
 import { ConsumerRepository } from "./entity/consumer.repository";
-import { Redirect } from "./entity/redirect.entity";
-import { RedirectRepository } from "./entity/redirect.repository";
+import { RedirectService } from "../redirect/redirect.service";
 
 @Injectable({ scope: Scope.REQUEST })
 export class ConsumerService {
@@ -24,9 +23,8 @@ export class ConsumerService {
     @InjectRepository(Consumer)
     private readonly consumerRepository: ConsumerRepository,
     @InjectRepository(User) private readonly userRepository: UserRepository,
-    @InjectRepository(Redirect)
-    private readonly redirectRepository: RedirectRepository,
     @Inject(REQUEST) private request: IUserReqeust,
+    private readonly redirectService: RedirectService,
   ) {}
 
   public async registration(
@@ -43,7 +41,7 @@ export class ConsumerService {
       dto,
       user,
     );
-    await this.url({
+    await this.addConsumerRedirectUrl({
       client_id: consumerRecord.client_id,
       redirect_url: dto.redirect_url,
     });
@@ -54,14 +52,13 @@ export class ConsumerService {
     return this.consumerRepository.list();
   }
 
-  public async url(dto: urlDto) {
+  public async addConsumerRedirectUrl(dto: urlDto) {
     const consumer = await this.consumerRepository.findOne({
       client_id: dto.client_id,
     });
     if (!consumer) {
       throw notFoundConsumerException;
     }
-
-    return await this.redirectRepository.url(dto.redirect_url, consumer);
+    await this.redirectService.createNewRedirectUrl(dto.redirect_url, consumer);
   }
 }

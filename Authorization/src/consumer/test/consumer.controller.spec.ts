@@ -60,14 +60,14 @@ describe("ConsumerController", () => {
     };
 
     it("should be success", () => {
-      controller.url(dto).then((res) => {
+      controller.addConsumerRedirectUrl(dto).then((res) => {
         expect(res).toBeInstanceOf(Object);
         expect(res.message).toBe("success");
       });
     });
 
     it("should be throw notFoundConsumer error", () => {
-      controller.url({ ...dto, client_id: "errorpls" }).catch((err) => {
+      controller.addConsumerRedirectUrl({ ...dto, client_id: "errorpls" }).catch((err) => {
         expect(err).toEqual(notFoundConsumerException);
       });
     });

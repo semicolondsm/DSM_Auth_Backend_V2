@@ -73,7 +73,7 @@ export class MockConsumerService {
     return consumersList;
   }
 
-  public url(dto: urlDto) {
+  public addConsumerRedirectUrl(dto: urlDto) {
     if (dto.client_id !== "testuuid") {
       throw notFoundConsumerException;
     }
