@@ -7,7 +7,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Redirect } from "./redirect.entity";
+import { Redirect } from "../../redirect/entity/redirect.entity";
 
 @Entity("consumers")
 export class Consumer {

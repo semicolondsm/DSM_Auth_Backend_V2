@@ -5,18 +5,16 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConsumerRepository } from "./entity/consumer.repository";
 import { UserRepository } from "../shared/user/entity/user.repository";
 import { JwtStrategy } from "../shared/jwt/passport/jwt.strategy";
-import { RedirectRepository } from "./entity/redirect.repository";
+import { RedirectService } from "../redirect/redirect.service";
+import { RedirectModule } from "../redirect/redirect.module";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      ConsumerRepository,
-      UserRepository,
-      RedirectRepository,
-    ]),
+    TypeOrmModule.forFeature([ConsumerRepository, UserRepository]),
     JwtStrategy,
+    RedirectModule,
   ],
-  providers: [ConsumerService],
+  providers: [ConsumerService, RedirectService],
   controllers: [ConsumerController],
 })
 export class ConsumerModule {}
