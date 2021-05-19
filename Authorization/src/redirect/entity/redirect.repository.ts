@@ -1,5 +1,5 @@
 import { EntityRepository, Repository } from "typeorm";
-import { Consumer } from "./consumer.entity";
+import { Consumer } from "../../consumer/entity/consumer.entity";
 import { Redirect } from "./redirect.entity";
 
 @EntityRepository(Redirect)
