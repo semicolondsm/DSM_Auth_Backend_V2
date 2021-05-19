@@ -5,7 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Consumer } from "./consumer.entity";
+import { Consumer } from "../../consumer/entity/consumer.entity";
 
 @Entity("redirect")
 export class Redirect {
