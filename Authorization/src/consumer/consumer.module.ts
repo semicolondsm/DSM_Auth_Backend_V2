@@ -5,7 +5,6 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConsumerRepository } from "./entity/consumer.repository";
 import { UserRepository } from "../shared/user/entity/user.repository";
 import { JwtStrategy } from "../shared/jwt/passport/jwt.strategy";
-import { RedirectService } from "../redirect/redirect.service";
 import { RedirectModule } from "../redirect/redirect.module";
 
 @Module({
@@ -14,7 +13,7 @@ import { RedirectModule } from "../redirect/redirect.module";
     JwtStrategy,
     RedirectModule,
   ],
-  providers: [ConsumerService, RedirectService],
+  providers: [ConsumerService],
   controllers: [ConsumerController],
 })
 export class ConsumerModule {}
