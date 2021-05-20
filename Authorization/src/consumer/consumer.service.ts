@@ -20,10 +20,10 @@ import { RedirectService } from "../redirect/redirect.service";
 @Injectable({ scope: Scope.REQUEST })
 export class ConsumerService {
   constructor(
-    @InjectRepository(Consumer)
+    @Inject(REQUEST)
+    private request: IUserReqeust,
+    private readonly userRepository: UserRepository,
     private readonly consumerRepository: ConsumerRepository,
-    @InjectRepository(User) private readonly userRepository: UserRepository,
-    @Inject(REQUEST) private request: IUserReqeust,
     private readonly redirectService: RedirectService,
   ) {}
 

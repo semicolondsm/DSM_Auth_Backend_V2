@@ -67,9 +67,11 @@ describe("ConsumerController", () => {
     });
 
     it("should be throw notFoundConsumer error", () => {
-      controller.addConsumerRedirectUrl({ ...dto, client_id: "errorpls" }).catch((err) => {
-        expect(err).toEqual(notFoundConsumerException);
-      });
+      controller
+        .addConsumerRedirectUrl({ ...dto, client_id: "errorpls" })
+        .catch((err) => {
+          expect(err).toEqual(notFoundConsumerException);
+        });
     });
   });
 });
