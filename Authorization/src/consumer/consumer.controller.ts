@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
+import { IUserReqeust } from "src/shared/user/interface/user-request.interface";
 import { ConsumerService } from "./consumer.service";
 import {
   RegistrationDto,
@@ -16,8 +17,9 @@ export class ConsumerController {
   @Post("registration")
   public async registration(
     @Body() dto: RegistrationDto,
+    @Req() req: IUserReqeust
   ): Promise<RegistrationResponseData> {
-    return await this.consumerService.registration(dto);
+    return await this.consumerService.registration(dto, req.user.user_identity);
   }
 
   @Get("list")

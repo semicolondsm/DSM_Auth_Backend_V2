@@ -1,13 +1,9 @@
-import { Inject, Injectable, Scope } from "@nestjs/common";
-import { REQUEST } from "@nestjs/core";
-import { InjectRepository } from "@nestjs/typeorm";
-import { IUserReqeust } from "../shared/user/interface/user-request.interface";
+import { Injectable } from "@nestjs/common";
 import {
   notFoundConsumerException,
   notFoundUserException,
 } from "../shared/exception/exception.index";
 import { User } from "../shared/user/entity/user.entity";
-import { UserRepository } from "../shared/user/entity/user.repository";
 import {
   RegistrationDto,
   RegistrationResponseData,
@@ -16,27 +12,24 @@ import { urlDto } from "./dto/url.dto";
 import { Consumer } from "./entity/consumer.entity";
 import { ConsumerRepository } from "./entity/consumer.repository";
 import { RedirectService } from "../redirect/redirect.service";
+import { UserService } from "../shared/user/user.service";
 
-@Injectable({ scope: Scope.REQUEST })
+@Injectable()
 export class ConsumerService {
   constructor(
-    @Inject(REQUEST)
-    private request: IUserReqeust,
-    private readonly userRepository: UserRepository,
     private readonly consumerRepository: ConsumerRepository,
+    private readonly userServie: UserService,
     private readonly redirectService: RedirectService,
   ) {}
 
   public async registration(
     dto: RegistrationDto,
+    user_identity: string
   ): Promise<RegistrationResponseData> {
-    const user: User = await this.userRepository.findByRequest(
-      this.request.user,
-    );
+    const user: User = await this.userServie.findByIdentity(user_identity);
     if (!user) {
       throw notFoundUserException;
     }
-
     const consumerRecord = await this.consumerRepository.registration(
       dto,
       user,
