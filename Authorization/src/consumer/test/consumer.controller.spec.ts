@@ -1,4 +1,5 @@
 import { Test, TestingModule } from "@nestjs/testing";
+import { IUserReqeust } from "../../shared/user/interface/user-request.interface";
 import { notFoundConsumerException } from "../../shared/exception/exception.index";
 import { MockConsumerService } from "../../shared/mock/consumer.mock";
 import { ConsumerController } from "../consumer.controller";
@@ -32,7 +33,7 @@ describe("ConsumerController", () => {
       redirect_url: "test123.com",
     };
     it("should be return client_id, client_secret", () => {
-      controller.registration(dto).then((res) => {
+      controller.registration(dto, { user: { user_identity: "testIdentity" } } as IUserReqeust).then((res) => {
         expect(res).toBeInstanceOf(Object);
         expect(res.client_id).toEqual("testuuid");
         expect(res.client_secret).toEqual("testuuid");
