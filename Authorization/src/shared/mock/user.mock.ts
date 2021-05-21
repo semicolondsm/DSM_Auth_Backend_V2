@@ -36,9 +36,7 @@ export class MockUserRepository {
           user.password = "exist";
           return user;
         }
-      } else if (args.where.identity) {
-        const identity: string = args.where.identity;
-      }
+      } 
     } else {
       if (args === "tester") {
         return new User();
