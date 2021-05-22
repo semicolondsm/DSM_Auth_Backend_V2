@@ -33,17 +33,22 @@ describe("ConsumerController", () => {
       redirect_url: "test123.com",
     };
     it("should be return client_id, client_secret", () => {
-      controller.registration(dto, { user: { user_identity: "testIdentity" } } as IUserReqeust).then((res) => {
-        expect(res).toBeInstanceOf(Object);
-        expect(res.client_id).toEqual("testuuid");
-        expect(res.client_secret).toEqual("testuuid");
-      });
+      controller
+        .registrateConsumer(dto, {
+          user: { user_identity: "testIdentity" },
+        } as IUserReqeust)
+        .then((res) => {
+          expect(res).toBeInstanceOf(Object);
+          expect(res.client_id).toEqual("testuuid");
+          expect(res.client_secret).toEqual("testuuid");
+        })
+        .catch(console.error);
     });
   });
 
   describe("list", () => {
     it("should be return consumer array", () => {
-      controller.list().then((res) => {
+      controller.getConsumerCatalog().then((res) => {
         expect(res).toBeInstanceOf(Array);
         expect(res[0].name).toEqual("naver");
         expect(res[0].domain_url).toEqual("naver.com");

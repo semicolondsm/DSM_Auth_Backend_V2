@@ -7,6 +7,7 @@ import { MockUserService } from "../../shared/mock/user.mock";
 import { RedirectService } from "../../redirect/redirect.service";
 import { MockRedirectService } from "../../shared/mock/redirect.mock";
 import { UserService } from "../../shared/user/user.service";
+import { Connection } from "typeorm";
 
 describe("ConsumerService", () => {
   let service: ConsumerService;
@@ -26,7 +27,11 @@ describe("ConsumerService", () => {
         {
           provide: RedirectService,
           useClass: MockRedirectService,
-        }
+        },
+        {
+          provide: Connection,
+          useClass: Object,
+        },
       ],
     }).compile();
 
@@ -44,17 +49,20 @@ describe("ConsumerService", () => {
       redirect_url: "test123.com",
     };
     it("should be sucess", () => {
-      service.registration(dto, "existId").then((res) => {
-        expect(res).toBeInstanceOf(Object);
-        expect(res.client_id).toEqual("testuuid");
-        expect(res.client_secret).toEqual("testuuid");
-      }).catch(console.error);
+      service
+        .registrateConsumer(dto, "existId")
+        .then((res) => {
+          expect(res).toBeInstanceOf(Object);
+          expect(res.client_id).toEqual("testuuid");
+          expect(res.client_secret).toEqual("testuuid");
+        })
+        .catch(console.error);
     });
   });
 
   describe("list", () => {
     it("should be return consumer array", () => {
-      service.list().then((res) => {
+      service.getConsumerCatalog().then((res) => {
         expect(res).toBeInstanceOf(Array);
         expect(res[0].name).toEqual("naver");
         expect(res[0].domain_url).toEqual("naver.com");

@@ -15,7 +15,7 @@ export class MockConsumerRepository {
     return { client_id, client_secret };
   }
 
-  public list() {
+  public findNameAndDomainUrl() {
     return consumersList;
   }
 
@@ -59,7 +59,7 @@ export class MockConsumerRepository {
 }
 
 export class MockConsumerService {
-  public registration(dto: RegistrationDto) {
+  public async registrateConsumer(dto: RegistrationDto) {
     const user = this.getUser();
     console.log(`dto: ${JSON.stringify(dto)}`);
     console.log(`user: ${JSON.stringify(user)}`);
@@ -69,17 +69,17 @@ export class MockConsumerService {
     return { client_id, client_secret };
   }
 
-  public list() {
+  public async getConsumerCatalog() {
     return consumersList;
   }
 
-  public addConsumerRedirectUrl(dto: urlDto) {
+  public async addConsumerRedirectUrl(dto: urlDto) {
     if (dto.client_id !== "testuuid") {
       throw notFoundConsumerException;
     }
   }
 
-  private getUser() {
+  private async getUser() {
     const user = new User();
     user.identity = "testIdentity";
     return user;
