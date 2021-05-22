@@ -12,7 +12,7 @@ import { UserModule } from "../shared/user/user.module";
     TypeOrmModule.forFeature([ConsumerRepository]),
     JwtStrategy,
     RedirectModule,
-    UserModule
+    UserModule,
   ],
   providers: [ConsumerService],
   controllers: [ConsumerController],
