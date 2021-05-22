@@ -15,16 +15,16 @@ export class ConsumerController {
 
   @UseGuards(AuthGuard("jwt"))
   @Post("registration")
-  public async registration(
+  public registrateConsumer(
     @Body() dto: RegistrationDto,
-    @Req() req: IUserReqeust
+    @Req() req: IUserReqeust,
   ): Promise<RegistrationResponseData> {
-    return await this.consumerService.registration(dto, req.user.user_identity);
+    return this.consumerService.registrateConsumer(dto, req.user.user_identity);
   }
 
   @Get("list")
-  public async list(): Promise<Consumer[]> {
-    return await this.consumerService.list();
+  public getConsumerCatalog(): Promise<Consumer[]> {
+    return this.consumerService.getConsumerCatalog();
   }
 
   @UseGuards(AuthGuard("jwt"))
