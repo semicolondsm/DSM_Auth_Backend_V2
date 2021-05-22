@@ -36,7 +36,7 @@ export class MockUserRepository {
           user.password = "exist";
           return user;
         }
-      } 
+      }
     } else {
       if (args === "tester") {
         return new User();
