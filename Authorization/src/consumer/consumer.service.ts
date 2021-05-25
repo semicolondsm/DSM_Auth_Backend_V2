@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
 import {
   notFoundConsumerException,
   notFoundUserException,
@@ -57,7 +57,8 @@ export class ConsumerService {
       await queryRunner.commitTransaction();
     } catch (err) {
       await queryRunner.rollbackTransaction();
-      throw err;
+      Logger.error(err);
+      throw new InternalServerErrorException();
     } finally {
       await queryRunner.release();
     }

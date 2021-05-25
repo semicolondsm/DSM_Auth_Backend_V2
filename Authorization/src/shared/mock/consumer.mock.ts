@@ -6,15 +6,6 @@ import { notFoundConsumerException } from "../exception/exception.index";
 import { Consumer } from "../../consumer/entity/consumer.entity";
 
 export class MockConsumerRepository {
-  public registration(dto: RegistrationDto, user: User) {
-    const client_id: string = "testuuid";
-    const client_secret: string = "testuuid";
-
-    console.log(`dto: ${JSON.stringify(dto)}`);
-    console.log(`user: ${JSON.stringify(user)}`);
-    return { client_id, client_secret };
-  }
-
   public findNameAndDomainUrl() {
     return consumersList;
   }

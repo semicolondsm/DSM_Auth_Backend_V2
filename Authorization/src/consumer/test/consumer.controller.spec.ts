@@ -26,7 +26,7 @@ describe("ConsumerController", () => {
     expect(controller).toBeDefined();
   });
 
-  describe("registration", () => {
+  describe("registrateConsumer", () => {
     const dto = {
       consumer: "testSite",
       domain_url: "test.com",
@@ -46,7 +46,7 @@ describe("ConsumerController", () => {
     });
   });
 
-  describe("list", () => {
+  describe("getConsumerCatalog", () => {
     it("should be return consumer array", () => {
       controller.getConsumerCatalog().then((res) => {
         expect(res).toBeInstanceOf(Array);
@@ -59,7 +59,7 @@ describe("ConsumerController", () => {
     });
   });
 
-  describe("url", () => {
+  describe("addConsumerRedirectUrl", () => {
     const dto = {
       client_id: "testuuid",
       redirect_url: "test123.com",

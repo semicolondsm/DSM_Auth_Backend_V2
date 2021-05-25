@@ -48,16 +48,9 @@ describe("ConsumerService", () => {
       domain_url: "test.com",
       redirect_url: "test123.com",
     };
-    it("should be sucess", () => {
-      service
-        .registrateConsumer(dto, "existId")
-        .then((res) => {
-          expect(res).toBeInstanceOf(Object);
-          expect(res.client_id).toEqual("testuuid");
-          expect(res.client_secret).toEqual("testuuid");
-        })
-        .catch(console.error);
-    });
+    it.todo("shoudl throw notFoundUserException");
+    it.todo("should throw internalServerErrorException");
+    it.todo("should success");
   });
 
   describe("list", () => {
