@@ -9,9 +9,8 @@ export class JwtBearerGuard implements CanActivate {
     if (!request.headers[this.header_name]) {
       return false;
     }
-    request.headers[this.header_name] = request.headers[this.header_name].slice(
-      7,
-    );
+    request.headers[this.header_name] =
+      request.headers[this.header_name].slice(7);
     return true;
   }
 }

@@ -40,13 +40,10 @@ export class DsmauthService {
     id,
     password,
   }: DsmauthLoginDto) {
-    const checkExistUserPromise: Promise<User> = this.userService.findByIdentity(
-      id,
-    );
-    const checkExistConsumerPromise: Promise<Consumer> = this.consumerRepository.getConsumerByRedirectUrl(
-      client_id,
-      redirect_url,
-    );
+    const checkExistUserPromise: Promise<User> =
+      this.userService.findByIdentity(id);
+    const checkExistConsumerPromise: Promise<Consumer> =
+      this.consumerRepository.getConsumerByRedirectUrl(client_id, redirect_url);
     const exUser: User = await checkExistUserPromise;
     if (!exUser || !(await bcrypt.compare(password, exUser.password))) {
       throw unauthorizedPasswordException;
@@ -67,9 +64,8 @@ export class DsmauthService {
     client_secret,
     code,
   }: DsmauthProvideTokenDto) {
-    const fineOneConsumerPromise: Promise<Consumer> = this.consumerRepository.findOne(
-      { where: { client_id } },
-    );
+    const fineOneConsumerPromise: Promise<Consumer> =
+      this.consumerRepository.findOne({ where: { client_id } });
     const getUserIdentityPromise: Promise<string> = asyncFuncRedisGet(code);
     const consumer: Consumer = await fineOneConsumerPromise;
     if (!consumer || consumer.client_secret !== client_secret) {

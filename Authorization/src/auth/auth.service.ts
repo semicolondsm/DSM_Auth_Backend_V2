@@ -45,10 +45,8 @@ export class AuthService {
     if (!storedData || storedData !== authcode) {
       throw unauthorizedCodeException;
     }
-    const getUserPromise: Promise<User> = this.userRepository.findByNameAndEmail(
-      name,
-      email,
-    );
+    const getUserPromise: Promise<User> =
+      this.userRepository.findByNameAndEmail(name, email);
     const hashPasswordPromise: Promise<string> = bcrypt.hash(password, 12);
     const exUser = await getUserPromise;
     if (!exUser) {

@@ -8,6 +8,8 @@ import { RedirectService } from "../../redirect/redirect.service";
 import { MockRedirectService } from "../../shared/mock/redirect.mock";
 import { UserService } from "../../shared/user/user.service";
 import { Connection } from "typeorm";
+import { notFoundUserException } from "../../shared/exception/exception.index";
+import { MockConnection } from "../../shared/mock/connection.mock";
 
 describe("ConsumerService", () => {
   let service: ConsumerService;
@@ -30,7 +32,7 @@ describe("ConsumerService", () => {
         },
         {
           provide: Connection,
-          useClass: Object,
+          useClass: MockConnection,
         },
       ],
     }).compile();
@@ -42,18 +44,22 @@ describe("ConsumerService", () => {
     expect(service).toBeDefined();
   });
 
-  describe("registration", () => {
+  describe("registrateConsumer", () => {
     const dto = {
       consumer: "testSite",
       domain_url: "test.com",
       redirect_url: "test123.com",
     };
-    it.todo("shoudl throw notFoundUserException");
+    it("shoudl throw notFoundUserException", () => {
+      service.registrateConsumer(dto, "zalgo").catch((err) => {
+        expect(err).toEqual(notFoundUserException);
+      });
+    });
     it.todo("should throw internalServerErrorException");
     it.todo("should success");
   });
 
-  describe("list", () => {
+  describe("getConsumerCatalog", () => {
     it("should be return consumer array", () => {
       service.getConsumerCatalog().then((res) => {
         expect(res).toBeInstanceOf(Array);
